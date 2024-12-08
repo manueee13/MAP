@@ -23,22 +23,26 @@ public class MainMenuView extends JFrame{
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         Dimension buttonSize = new Dimension(200, 50);
 
-        JButton newGameButton = new JButton("Nuova partita");
-        JButton loadGameButton = new JButton("Carica partita");
-        JButton optionsButton = new JButton("Opzioni");
+        String[] buttonLabels = {"Nuova partita", "Carica partita", "Opzioni"};
+        Runnable[] buttonActions = {
+            this::startNewGame,
+            this::loadGame,
+            this::openOptions
+        };
 
-        newGameButton.setPreferredSize(buttonSize);
-        loadGameButton.setPreferredSize(buttonSize);
-        optionsButton.setPreferredSize(buttonSize);
+        for (int i = 0; i < buttonLabels.length; i++) {
+            JButton button = new JButton(buttonLabels[i]);
+            button.setPreferredSize(buttonSize);
+            button.setMinimumSize(buttonSize);
+            button.setMaximumSize(buttonSize);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            final int index = i; // Necessario per lambda expressions
+            button.addActionListener(e -> buttonActions[index].run());
+            buttonPanel.add(Box.createVerticalStrut(10));
+            buttonPanel.add(button);
+        }
 
-        buttonPanel.add(newGameButton);
-        buttonPanel.add(loadGameButton);
-        buttonPanel.add(optionsButton);
-    
-        newGameButton.addActionListener(e -> startNewGame());
-        loadGameButton.addActionListener(e -> loadGame());
-        optionsButton.addActionListener(e -> openOptions());
-
+        buttonPanel.add(Box.createVerticalGlue());
         add(buttonPanel, BorderLayout.CENTER);
         setVisible(true);
     }
