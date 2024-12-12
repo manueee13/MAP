@@ -132,7 +132,7 @@ public class MainMenuView extends JFrame{
     }
 
     private void startNewGame() {
-        JOptionPane.showMessageDialog(this, "pre-build 0.1 - Questo è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
+        JOptionPane.showMessageDialog(this, "build pre-alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
         
     }
 
