@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @doc Classe MainMenuView
+ * Classe MainMenuView
  * Classe che gestisce la finestra del menu principale
  */
 public class MainMenuView extends JFrame{
@@ -15,7 +15,7 @@ public class MainMenuView extends JFrame{
 
 
     /**
-     * @doc Gestione della finestra MainMenu
+     * Gestione della finestra MainMenu
      */
     public MainMenuView() 
     {
@@ -132,12 +132,13 @@ public class MainMenuView extends JFrame{
     }
 
     private void startNewGame() {
-        JOptionPane.showMessageDialog(this, "build pre-alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
-        
+        JOptionPane.showMessageDialog(this, "build alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
+        dispose();
+        new GameView();
     }
 
     private void loadGame() {
-        //TODO
+        //TODO: Implementare caricamento partita
         JOptionPane.showMessageDialog(this, "Funzione di caricamento non ancora implementata.");
     }
 }
