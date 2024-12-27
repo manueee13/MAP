@@ -1,10 +1,9 @@
 package com.manueee.systembreach.view;
 
 import javax.swing.*;
-
 import com.manueee.systembreach.util.fonts.FontUtils;
-
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * Classe GameView
@@ -15,7 +14,6 @@ public class GameView extends JFrame {
     private JTextArea terminalPanel;
     private JLabel timerLabel;
     private JTextArea infoPanel;
-    private Timer cdTimer;
     private Font customFont;
     private CardLayout cardLayout;
     private JPanel mainPanel;
@@ -249,6 +247,14 @@ public class GameView extends JFrame {
      */
     public JLabel getTimerLabel() {
         return timerLabel;
+    }
+
+    public void updateTimer(String time) {
+        SwingUtilities.invokeLater(() -> timerLabel.setText(time));
+    }
+
+    public void addStartTimerListener(ActionListener listener) {
+        // Implementa la logica per aggiungere un listener al timer
     }
 
     /**
