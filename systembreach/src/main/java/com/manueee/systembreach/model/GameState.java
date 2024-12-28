@@ -1,7 +1,5 @@
 package com.manueee.systembreach.model;
 
-import com.manueee.systembreach.model.Timer;
-
 public class GameState {
     private int timeRemaining;
     private boolean isGameOver;

@@ -1,5 +1,8 @@
 package com.manueee.systembreach.view;
 
+import com.manueee.systembreach.controller.GameController;
+import com.manueee.systembreach.model.GameState;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -134,7 +137,13 @@ public class MainMenuView extends JFrame{
     private void startNewGame() {
         JOptionPane.showMessageDialog(this, "build alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
         dispose();
-        new GameView();
+
+        // Inizializza il gioco
+        GameState gameState = new GameState(1800); // 1800 = 30 minuti);
+        GameView gameView = new GameView();
+        new GameController(gameState, gameView);
+
+        gameView.setVisible(true);
     }
 
     private void loadGame() {

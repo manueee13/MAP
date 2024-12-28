@@ -169,7 +169,7 @@ public class GameView extends JFrame {
     }
 
     private void timerLabel() {
-        timerLabel = new JLabel("12:30");
+        timerLabel = new JLabel("30:00");
         timerLabel.setFont(customFont);
         timerLabel.setForeground(Color.GREEN);
         timerLabel.setBackground(Color.BLACK);
