@@ -1,20 +1,28 @@
 package com.manueee.systembreach.model;
 
-public class GameState {
-    private int timeRemaining;
-    private boolean isGameOver;
+import java.util.List;
 
-    public GameState(int initialTime) {
-        this.timeRemaining = initialTime;
+public class GameState {
+    private boolean isGameOver;
+    private List<String> terminalHistory;
+    private List<String> infoHistory;
+
+    public GameState() {
         this.isGameOver = false;
     }
 
-    public int getTimeRemaining() {
-        return timeRemaining;
+    private List<GameStateObserver> observers;
+
+    public interface GameStateObserver {
+        void onGameStateChanged();
     }
 
-    public void setTimeRemaining(int timeRemaining) {
-        this.timeRemaining = timeRemaining;
+    public void addObserver(GameStateObserver observer) {
+        observers.add(observer);
+    }
+
+    private void notifyObservers() {
+        observers.forEach(GameStateObserver::onGameStateChanged);
     }
 
     public boolean isGameOver() {

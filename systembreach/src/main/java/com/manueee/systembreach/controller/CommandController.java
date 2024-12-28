@@ -1,6 +1,11 @@
 package com.manueee.systembreach.controller;
 
+import com.manueee.systembreach.model.GameState;
+
 public class CommandController {
-    public CommandController() {
+    private final GameState gameState;
+    public CommandController(GameState gameState) {
+        this.gameState = gameState;
+
     }
 }

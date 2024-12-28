@@ -1,7 +1,6 @@
 package com.manueee.systembreach.model;
 
 import java.util.concurrent.TimeUnit;
-import java.util.Timer;
 
 public class GameTimer implements Runnable {
     /**
@@ -9,17 +8,21 @@ public class GameTimer implements Runnable {
      */
     public interface TimerListener {
         void onTimeUpdate(int secondsLeft); // Aggiorna il timer
-        void onTimeOut(); // Notifica il time out
+        void onTimeOut(); // Notifica il time out+
     }
 
     private final TimerListener listener;
-    private final int initialTimer;
     private volatile boolean isRunning;
     private Thread timerThread;
     private int currentTime;
 
     public GameTimer(int seconds, TimerListener listener) {
-        this.initialTimer = seconds;
+        if (seconds <= 0) {
+            throw new IllegalArgumentException("Timer must be greater than 0");
+        }
+        if (listener == null) {
+            throw new IllegalArgumentException("Listener must not be null");
+        }
         this.currentTime = seconds;
         this.listener = listener;
         this.isRunning = false;
@@ -31,8 +34,11 @@ public class GameTimer implements Runnable {
         timerThread.start();
     }
 
-    public void stop() {
+    public synchronized void stopTimer() {
         isRunning = false;
+        if (timerThread != null) {
+            timerThread.interrupt();
+        }
     }
 
     @Override
@@ -44,6 +50,7 @@ public class GameTimer implements Runnable {
                 listener.onTimeUpdate(currentTime);
 
                 if (currentTime <= 0){
+                    stopTimer();
                     listener.onTimeOut();
                 }
             } catch (InterruptedException e) {

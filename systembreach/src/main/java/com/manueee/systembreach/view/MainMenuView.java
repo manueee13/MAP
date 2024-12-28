@@ -139,7 +139,7 @@ public class MainMenuView extends JFrame{
         dispose();
 
         // Inizializza il gioco
-        GameState gameState = new GameState(1800); // 1800 = 30 minuti);
+        GameState gameState = new GameState();
         GameView gameView = new GameView();
         new GameController(gameState, gameView);
 
