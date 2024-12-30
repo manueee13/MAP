@@ -21,10 +21,12 @@ public class GameState {
         observers.add(observer);
     }
 
+    /*
     private void notifyObservers() {
         observers.forEach(GameStateObserver::onGameStateChanged);
     }
-
+    */
+    
     public boolean isGameOver() {
         return isGameOver;
     }

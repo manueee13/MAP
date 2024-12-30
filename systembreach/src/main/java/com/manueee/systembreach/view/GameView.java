@@ -1,10 +1,15 @@
 package com.manueee.systembreach.view;
 
-import javax.swing.*;
 import com.manueee.systembreach.util.fonts.FontUtils;
+import com.manueee.systembreach.controller.CommandController;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 /**
  * Classe GameView
  * Classe che gestisce la finestra di gioco principale
@@ -148,13 +153,72 @@ public class GameView extends JFrame {
 
     private void terminalPanel() {
         terminalPanel = new JTextArea();
-        terminalPanel.setEditable(false);
         terminalPanel.setFont(customFont);
         terminalPanel.setBackground(Color.BLACK);
         terminalPanel.setForeground(Color.GREEN);
         terminalPanel.setCaretColor(Color.GREEN);
         terminalPanel.setMargin(new Insets(10, 10, 10, 10));
-        terminalPanel.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+
+        // Prompt iniziale
+        terminalPanel.setText("user@system:~$ ");
+
+        terminalPanel.addKeyListener(new KeyListener() {
+            private StringBuilder commandBuffer = new StringBuilder();
+            private int lastPromptPosition = terminalPanel.getText().length();
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Impedisci la cancellazione del prompt
+                if (terminalPanel.getCaretPosition() < lastPromptPosition) {
+                    e.consume();
+                    terminalPanel.setCaretPosition(terminalPanel.getText().length());
+                    return;
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    e.consume();
+                    String command = commandBuffer.toString().trim();
+
+                    // Aggiungi nuova riga
+                    terminalPanel.append("\n");
+
+                    // Esegui il comando tramite CommandController
+                    // TODO
+                    // CommandController.executeCommand(command);
+                    // Output del comando
+                    // TODO
+                    // terminalPanel.append(output);
+
+                    // Nuovo prompt
+                    terminalPanel.append("\nuser@system:~$ ");
+
+                    // Reset del buffer
+                    commandBuffer.setLength(0);
+                    lastPromptPosition = terminalPanel.getText().length();
+                }
+                // Gestione backspace
+                else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                    if (terminalPanel.getCaretPosition() <= lastPromptPosition) {
+                        e.consume();
+                    }
+                    else if (commandBuffer.length() > 0) {
+                        commandBuffer.setLength(commandBuffer.length() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Aggiorna il comando corrente con il testo dopo il prompt
+                if (e.getKeyCode() != KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+                    String text = terminalPanel.getText();
+                    commandBuffer = new StringBuilder(text.substring(lastPromptPosition));
+                }
+            }
+        });
     }
 
     private void infoPanel() {
