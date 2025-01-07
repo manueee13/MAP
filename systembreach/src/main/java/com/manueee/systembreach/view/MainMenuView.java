@@ -1,7 +1,6 @@
 package com.manueee.systembreach.view;
 
 import com.manueee.systembreach.controller.GameController;
-import com.manueee.systembreach.model.GameState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,11 +138,7 @@ public class MainMenuView extends JFrame{
         dispose();
 
         // Inizializza il gioco
-        GameState gameState = new GameState();
-        GameView gameView = new GameView();
-        new GameController(gameState, gameView);
-
-        gameView.setVisible(true);
+        new GameController(true);
     }
 
     private void loadGame() {

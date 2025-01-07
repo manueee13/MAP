@@ -6,7 +6,7 @@ import java.io.InputStream;
 public final class FontUtils {
     public static Font loadFont() {
         try {
-            InputStream fontStream = FontUtils.class.getResourceAsStream("/resources/fonts/BigBlueTermPlusNerdFont-Regular.ttf");
+            InputStream fontStream = FontUtils.class.getResourceAsStream("/fonts/BigBlueTermPlusNerdFont-Regular.ttf");
 
             if (fontStream != null) {
                 Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(24f);

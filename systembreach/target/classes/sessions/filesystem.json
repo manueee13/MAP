@@ -1,0 +1,22 @@
+{
+    "root": {
+        "type": "directory",
+        "name": "/",
+        "children": {
+            "home": {
+                "type": "directory",
+                "children": {
+                    "prova.txt": {
+                        "type": "file",
+                        "content": "Caricato!"
+                    }
+                }
+            },
+            "bin": {
+                "type": "directory",
+                "children": {}
+            }
+        }
+    }
+}
+  

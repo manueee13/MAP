@@ -1,17 +1,47 @@
 package com.manueee.systembreach.model;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.manueee.systembreach.util.sessions.SessionUtils;
+import com.manueee.systembreach.util.commands.EnumCommands;
 public class GameState {
+    private final FileSystem fileSystem;
     private boolean isGameOver;
-    private List<String> terminalHistory;
-    private List<String> infoHistory;
+    private List<GameStateObserver> observers;
+    private final Set<EnumCommands> availableCommands;
 
     public GameState() {
         this.isGameOver = false;
+        this.observers = new ArrayList<>();
+        this.fileSystem = SessionUtils.createNewSession();
+        this.availableCommands = new HashSet<>();
+        initializeCommands();
     }
 
-    private List<GameStateObserver> observers;
+    public FileSystem getFileSystem() {
+        return fileSystem;
+    }
+
+    private void initializeCommands() {
+        availableCommands.add(EnumCommands.LIST);
+        availableCommands.add(EnumCommands.LS);
+        availableCommands.add(EnumCommands.CD);
+        availableCommands.add(EnumCommands.CAT);
+        availableCommands.add(EnumCommands.CLEAR);
+        availableCommands.add(EnumCommands.MANUAL);
+    }
+
+    public boolean isCommandAvailable(EnumCommands command) {
+        return availableCommands.contains(command);
+    }
+
+    public void unlockCommand(EnumCommands command) {
+        availableCommands.add(command);
+        notifyObservers();
+    }
 
     public interface GameStateObserver {
         void onGameStateChanged();
@@ -21,17 +51,18 @@ public class GameState {
         observers.add(observer);
     }
 
-    /*
     private void notifyObservers() {
         observers.forEach(GameStateObserver::onGameStateChanged);
     }
-    */
     
     public boolean isGameOver() {
         return isGameOver;
     }
 
     public void setGameOver(boolean gameOver) {
-        isGameOver = gameOver;
+        if (this.isGameOver != gameOver) {
+            this.isGameOver = gameOver;
+            notifyObservers();
+        }
     }
 }

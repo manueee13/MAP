@@ -4,7 +4,6 @@ import com.manueee.systembreach.util.fonts.FontUtils;
 import com.manueee.systembreach.controller.CommandController;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -24,8 +23,9 @@ public class GameView extends JFrame {
     private JPanel mainPanel;
     private JSlider musicSlider;
     private JSlider soundSlider;
+    private CommandController commandController;
 
-    public GameView() {
+    public GameView(CommandController commandController) {
         setTitle("System Breach");
         setSize(1280, 960);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,6 +47,8 @@ public class GameView extends JFrame {
         add(mainPanel);
         cardLayout.show(mainPanel, "Game");
         setVisible(true);
+
+        this.commandController = commandController;
     }
 
     private void menuBar() {
@@ -158,6 +160,8 @@ public class GameView extends JFrame {
         terminalPanel.setForeground(Color.GREEN);
         terminalPanel.setCaretColor(Color.GREEN);
         terminalPanel.setMargin(new Insets(10, 10, 10, 10));
+        terminalPanel.setLineWrap(true);
+        terminalPanel.setWrapStyleWord(true);
 
         // Prompt iniziale
         terminalPanel.setText("user@system:~$ ");
@@ -184,13 +188,9 @@ public class GameView extends JFrame {
 
                     // Aggiungi nuova riga
                     terminalPanel.append("\n");
-
-                    // Esegui il comando tramite CommandController
-                    // TODO
-                    // CommandController.executeCommand(command);
-                    // Output del comando
-                    // TODO
-                    // terminalPanel.append(output);
+                    // Esegui il comandol
+                    String output = commandController.processCommand(command);
+                    terminalPanel.append(output);
 
                     // Nuovo prompt
                     terminalPanel.append("\nuser@system:~$ ");

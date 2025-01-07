@@ -3,10 +3,14 @@ package com.manueee.systembreach.util.commands;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.manueee.systembreach.model.FileSystem;
+import com.manueee.systembreach.model.Terminal;
+
 /**
  * Funzioni dei comandi del gioco.
  */
 public final class Commands {
+
     private Commands() {
 
     }
@@ -30,11 +34,11 @@ public final class Commands {
                 .collect(Collectors.joining(" "));
     }
 
-    public static String lsCommand() {
-        return "ls";
+    public static String lsCommand(FileSystem fs, String path) {
+        return fs.ls(path);
     }
 
-    public static String cdCommand() {
+    public static String cdCommand(FileSystem fs, String path) {
         return "cd";
     }
 
@@ -42,8 +46,8 @@ public final class Commands {
         return "cat";
     }
 
-    public static String clearCommand() {
-        return "clear";
+    public static void clearCommand(Terminal terminal) {
+        terminal.clearOutputBuffer();
     }
 
     public static String manualCommand() {
@@ -51,14 +55,17 @@ public final class Commands {
     }
 
     public static String vpnCommand() {
+        // TODO
         return "wp-quick";
     }
 
     public static String sqlCommand() {
+        // TODO
         return "sql";
     }
 
     public static String pwnCommand() {
+        // TODO
         return "pwn";
     }
 }

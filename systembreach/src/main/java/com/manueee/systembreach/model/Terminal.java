@@ -1,29 +1,35 @@
 package com.manueee.systembreach.model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class Terminal {
     private List<String> commandHistory;
-    private String currentDirectory;
-    private StringBuilder outputBuffer;
+    private List<String> outputBuffer;
 
     public Terminal() {
-        //this.commandHistory = new ArrayList<>();
-        this.currentDirectory = "~/";
-        this.outputBuffer = new StringBuilder();
+        this.commandHistory = new ArrayList<>();
+        this.outputBuffer = new ArrayList<>();
     }
 
-    public void addToHistory(String command) {
+    public void addCommand(String command) {
         commandHistory.add(command);
     }
 
-    public void appendOutput(String output) {
-        outputBuffer.append(output).append("\n");
+    public void addOutput(String output) {
+        outputBuffer.add(output);
     }
 
-    public String getPrompt() {
-        return "user@system:" + currentDirectory + "$ ";
+    public List<String> getCommandHistory() {
+        return new ArrayList<>(commandHistory);
     }
     
+    public List<String> getOutputBuffer() {
+        return new ArrayList<>(outputBuffer);
+    }
+
+    public void clearOutputBuffer() {
+        outputBuffer.clear();
+    }
     
 }
