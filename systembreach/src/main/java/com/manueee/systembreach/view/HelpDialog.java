@@ -3,6 +3,10 @@ package com.manueee.systembreach.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <h2>HelpDialog</h2>
+ * Classe <b>view</b> per la finestra di aiuto.
+ */
 public class HelpDialog extends JDialog {
     public HelpDialog(Frame parent) {
         super(parent, "Aiuto", true);

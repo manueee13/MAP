@@ -8,6 +8,10 @@ import com.google.gson.JsonObject;
 
 import com.manueee.systembreach.model.FileSystem;
 
+/**
+ * <h2>SessionUtils</h2>
+ * Funzioni per la gestione delle sessioni del gioco.
+ */
 public class SessionUtils {
     
     public static FileSystem createNewSession() {

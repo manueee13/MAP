@@ -3,6 +3,7 @@ package com.manueee.systembreach.util.commands;
 import java.util.stream.Stream;
 
 /**
+ * <h2>EnumCommands</h2>
  * Definizione dei comandi del gioco.
  */
 public enum EnumCommands {

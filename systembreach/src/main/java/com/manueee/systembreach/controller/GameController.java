@@ -5,6 +5,10 @@ import com.manueee.systembreach.model.GameTimer;
 import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.view.GameView;
 
+/**
+ * <h1>Classe GameController</h1>
+ * Classe <b>controller</b> per l'interazione tra {@link #gameView} e <b>model</b>.
+ */
 public class GameController implements GameTimer.TimerListener {
     private GameState gameState;
     private GameView gameView;

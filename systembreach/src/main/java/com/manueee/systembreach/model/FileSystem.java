@@ -5,6 +5,10 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;;
 
+/**
+ * <h1>FileSystem</h1>
+ * Classe <b>model</b> per la gestione del file system di gioco.
+ */
 public class FileSystem {
     private Directory root;
     private Directory currentDirectory;
@@ -34,15 +38,38 @@ public class FileSystem {
      * @return il contenuto della directory
      */
     public String ls(String path) {
-        Directory dir = path == null || path.trim().isEmpty() 
-        ? currentDirectory 
-        : findDirectory(path);
-        if (dir == null) {
+        if (path == null || path.trim().isEmpty()) {
+            return String.join(" ", currentDirectory.children.keySet());
+        }
+
+        FSNode node = findNode(path);
+        if (node == null) {
             return "ls: cannot access '" + path + "': No such file or directory";
         }
-        return String.join(" ", dir.children.keySet());
+
+        if (node instanceof Directory) {
+            Directory dir = (Directory) node;
+            return String.join(" ", dir.children.keySet());
+        } else {
+            return node.getName();
+        }
     }
 
+    /**
+     * Cambia percorso della directory corrente.
+     * @param path
+     * @return <b>true</b> se la directory esiste, <b>false</b> altrimenti
+     */
+    public boolean cd(String path) {
+        Directory dir = findDirectory(path);
+        if (dir == null)
+        {
+            return false;
+        }
+        currentDirectory = dir;
+        return true;
+    }
+    
     /**
      * Crea un file in una directory specifica
      * @param path il percorso del file
@@ -66,18 +93,40 @@ public class FileSystem {
     }
 
     private FSNode findNode(String path) {
+        // Se path è vuoto o "." ritorna la directory corrente
+        if (path == null || path.isEmpty() || path.equals(".")) {
+            return currentDirectory;
+        }
+    
+        // Se path è ".." vai al parent se esiste
+        if (path.equals("..")) {
+            return currentDirectory.parent != null ? currentDirectory.parent : currentDirectory;
+        }
+    
+        // Determina il punto di partenza
         FSNode current = path.startsWith("/") ? root : currentDirectory;
-        String[] parts = path.split("/");
-        for (String part : parts) {
-            if (part.isEmpty() || part.equals(".")) continue;
-            if (part.equals("..")) {
-                current = current instanceof Directory && ((Directory) current).parent != null 
-                ? ((Directory) current).parent 
-                : current;
-            } else if (current instanceof Directory) {
-                current = ((Directory) current).children.get(part);
+        path = path.startsWith("/") ? path.substring(1) : path;
+    
+        // Dividi il path e naviga
+        for (String part : path.split("/")) {
+            if (part.isEmpty() || part.equals(".")) {
+                continue;
             }
-            if (current == null) return null;
+            if (part.equals("..")) {
+                if (current.parent != null) {
+                    current = current.parent;
+                }
+                continue;
+            }
+            if (!(current instanceof Directory)) {
+                return null;
+            }
+            Directory dir = (Directory) current;
+            FSNode next = dir.children.get(part);
+            if (next == null) {
+                return null;
+            }
+            current = next;
         }
         return current;
     }
@@ -122,6 +171,10 @@ public class FileSystem {
         public FSNode(String name, Directory parent) {
             this.name = name;
             this.parent = parent;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 

@@ -7,6 +7,7 @@ import com.manueee.systembreach.model.FileSystem;
 import com.manueee.systembreach.model.Terminal;
 
 /**
+ * <h2>Commands</h2>
  * Funzioni dei comandi del gioco.
  */
 public final class Commands {
@@ -39,7 +40,13 @@ public final class Commands {
     }
 
     public static String cdCommand(FileSystem fs, String path) {
-        return "cd";
+        if (path == null || path.trim().isEmpty()) {
+            return "cd: missing operand";
+        }
+        if (!fs.cd(path)) {
+            return "cd: " + path + ": No such file or directory";
+        }
+        return "";
     }
 
     public static String catCommand() {

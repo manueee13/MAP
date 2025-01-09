@@ -2,6 +2,10 @@ package com.manueee.systembreach.model;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <h2>GameTimer</h2>
+ * Classe <b>model</b> per la gestione del timer di gioco.
+ */
 public class GameTimer implements Runnable {
     /**
      * Interfaccia per la gestione degli eventi del timer

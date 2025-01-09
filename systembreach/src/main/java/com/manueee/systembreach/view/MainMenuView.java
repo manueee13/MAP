@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Classe MainMenuView
- * Classe che gestisce la finestra del menu principale
+ * <h2>MainMenuView</h2>
+ * Classe <b>View</b> per il menu principale.
  */
 public class MainMenuView extends JFrame{
     private CardLayout cardLayout;

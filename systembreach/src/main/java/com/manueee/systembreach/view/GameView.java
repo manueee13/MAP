@@ -10,8 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 /**
- * Classe GameView
- * Classe che gestisce la finestra di gioco principale
+ * <h2>GameView</h2>
+ * Classe <b>view</b> della finestra di gioco.
  */
 public class GameView extends JFrame {
     private JPanel gamePanel;

@@ -7,6 +7,11 @@ import java.util.Set;
 
 import com.manueee.systembreach.util.sessions.SessionUtils;
 import com.manueee.systembreach.util.commands.EnumCommands;
+
+/**
+ * <h2>GameState</h2>
+ * Classe <b>model</b> per la gestione dello stato del gioco.
+ */
 public class GameState {
     private final FileSystem fileSystem;
     private boolean isGameOver;

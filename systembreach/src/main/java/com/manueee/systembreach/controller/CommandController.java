@@ -5,6 +5,10 @@ import com.manueee.systembreach.model.GameState;
 import com.manueee.systembreach.util.commands.Commands;
 import com.manueee.systembreach.util.commands.EnumCommands;
 
+/**
+ * <h2>CommandController</h2>
+ * Classe <b>controller</b> per l'interazione dei comandi in input dell'utente.
+ */
 public class CommandController {
     private final Terminal terminal;
     private final GameState gameState;

@@ -3,6 +3,10 @@ package com.manueee.systembreach.util.fonts;
 import java.awt.*;
 import java.io.InputStream;
 
+/**
+ * <h2>FontUtils</h2>
+ * Carica il font personalizzato.
+ */
 public final class FontUtils {
     public static Font loadFont() {
         try {

@@ -3,6 +3,10 @@ package com.manueee.systembreach.model;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * <h2>Terminal</h2>
+ * Classe <b>model</b> per la gestione del terminale.
+ */
 public class Terminal {
     private List<String> commandHistory;
     private List<String> outputBuffer;
