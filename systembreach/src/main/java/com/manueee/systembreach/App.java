@@ -1,6 +1,5 @@
 package com.manueee.systembreach;
 
-import com.manueee.systembreach.util.debug.DebugUtils;
 import com.manueee.systembreach.view.MainMenuView;
 import javax.swing.SwingUtilities;
 
