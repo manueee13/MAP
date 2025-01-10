@@ -1,7 +1,7 @@
 package com.manueee.systembreach.controller;
 
-import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.model.GameState;
+import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.util.commands.Commands;
 import com.manueee.systembreach.util.commands.EnumCommands;
 
@@ -18,6 +18,13 @@ public class CommandController {
         this.gameState = gameState;
     }
 
+    /**
+     * <code>processCommand</code>
+     * Processa i comandi forniti in input dall'utente, verificando che il
+     * comando sia disponibile nella sessione e che sia corretto.
+     * @param input della stringa di comando fornita dall'utente
+     * @return <code>invalidCommand()</code> se il comando non è valido o non disponibile
+     */
     public String processCommand(String input) {
         String[] parts = input.split(" ", 2);
         String command = parts[0];
@@ -29,7 +36,7 @@ public class CommandController {
         }
 
         String result;
-        switch(cmd) {
+        switch (cmd) {
             case LIST:
                 result = Commands.listCommand();
                 break;
@@ -51,7 +58,7 @@ public class CommandController {
                 break;
             default:
                 result = Commands.invalidCommand();
-        };
+        }
         terminal.addCommand(command);
         terminal.addOutput(result);
         return result;

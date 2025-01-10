@@ -1,9 +1,8 @@
 package com.manueee.systembreach.model;
 
+import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.JsonObject;;
 
 /**
  * <h1>FileSystem</h1>
@@ -62,18 +61,18 @@ public class FileSystem {
      */
     public boolean cd(String path) {
         Directory dir = findDirectory(path);
-        if (dir == null)
-        {
+        if (dir == null) {
             return false;
         }
         currentDirectory = dir;
         return true;
     }
-    
+
     /**
-     * Crea un file in una directory specifica
-     * @param path il percorso del file
-     * @param content il contenuto del file
+     * <code>createFile</code>
+     * Crea un file in una directory specifica.
+     * @param path Assegna il percorso del file
+     * @param content Restituisce il contenuto del file
      */
     public void createFile(String path, String content) {
         String fileName = path.substring(path.lastIndexOf("/") + 1);
@@ -83,7 +82,9 @@ public class FileSystem {
         if (parentDir != null) {
             parentDir.children.put(fileName, new File(fileName, parentDir, content));
         } else {
-            throw new IllegalArgumentException("createFile: cannot create file '" + path + "': No such file or directory");
+            throw new IllegalArgumentException("createFile: cannot create file '"
+                    + path
+                    + "': No such file or directory");
         }
     }
 
@@ -94,12 +95,12 @@ public class FileSystem {
 
     private FSNode findNode(String path) {
         // Se path è vuoto o "." ritorna la directory corrente
-        if (path == null || path.isEmpty() || path.equals(".")) {
+        if (path == null || path.isEmpty() || ".".equals(path)) {
             return currentDirectory;
         }
-    
+
         // Se path è ".." vai al parent se esiste
-        if (path.equals("..")) {
+        if ("..".equals(path)) {
             return currentDirectory.parent != null ? currentDirectory.parent : currentDirectory;
         }
     
@@ -139,7 +140,8 @@ public class FileSystem {
      * @return la directory creata.
      */
     private Directory parseDirectory(JsonObject dirJson, Directory parent) {
-        if (dirJson == null || !dirJson.has("name")) {
+        if (dirJson == null || !dirJson.has("name") || !dirJson.has("type")|| 
+            !"directory".equals(dirJson.get("type").getAsString())) {
             return null;
         }
 
@@ -150,15 +152,17 @@ public class FileSystem {
             JsonObject children = dirJson.getAsJsonObject("children");
             for (String childName : children.keySet()) {
                 JsonObject childJson = children.getAsJsonObject(childName);
+                childJson.addProperty("name", childName);
+
                 if ("file".equals(childJson.get("type").getAsString())) {
                     String content = childJson.has("content") ? childJson.get("content").getAsString() : "";
                     dir.children.put(childName, new File(childName, dir, content));
                 } else if ("directory".equals(childJson.get("type").getAsString())) {
-                    dir.children.put(childName, parseDirectory(childJson, dir));
+                    Directory childDir = parseDirectory(childJson, dir);
+                    dir.children.put(childName, childDir);
                 }
             }
         }
-
         return dir;
     }
 
@@ -192,11 +196,14 @@ public class FileSystem {
     }
 
     private class Directory extends FSNode {
-        private Map<String, FSNode> children;
+        private Map<String, FSNode> children = new HashMap<>();
 
         public Directory(String name, Directory parent) {
             super(name, parent);
-            this.children = new HashMap<>();
+        }
+
+        public Map<String, FSNode> getChildren() {
+            return children;
         }
     }
 }
