@@ -32,7 +32,7 @@ public class HelpDialog extends JDialog {
         text.append(String.format("%-15s%-35s\n", "ls", "Lista directory corrente"));
         text.append(String.format("%-15s%-35s\n", "cat <file>", "Leggi contenuto file"));
         text.append(String.format("%-15s%-35s\n", "man <command>", "Manuale del comando"));
-        text.append(String.format("%-15s%-35s\n", "help", "Lista comandi"));
+        text.append(String.format("%-15s%-35s\n", "list", "Lista comandi"));
         text.append(String.format("%-15s%-35s\n", "clear", "Pulisce terminale"));
         text.append("\n");
         text.append(String.format("%-30s\n", "──────────────────────────────"));

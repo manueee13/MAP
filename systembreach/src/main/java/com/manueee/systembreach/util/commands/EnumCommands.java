@@ -9,38 +9,38 @@ import java.util.stream.Stream;
 public enum EnumCommands {
     INVALID(
         "",
-        "Comando non valido"
+        ""
     ),
 
     LS(
         "ls",
-        "Stampa il contenuto della directory corrente"
+        "ls <path> : Stampa il contenuto della directory corrente"
     ),
 
     CD(
         "cd",
-        "Cambia la directory corrente"
+        "cd <path> : Cambia la directory corrente"
     ),
 
 
     CAT(
         "cat",
-        "Stampa il contenuto di un file"
+        "cat <file> : Stampa il contenuto di un file"
     ),
 
     CLEAR(
         "clear",
-        "Pulisce il terminale"
+        "clear : Pulisce il terminale"
     ),
 
     LIST(
         "list",
-        "Mostra l'elenco dei comandi disponibili"
+        "list : Mostra l'elenco dei comandi disponibili"
     ),
 
     MANUAL(
         "man",
-        "Guida all'uso di un comando"
+        "man <command> : Guida all'uso di un comando"
     ),
 
     VPN(
@@ -48,17 +48,9 @@ public enum EnumCommands {
         "Connettiti alla VPN"
     ),
 
-    // CHALLENGE
-    // SQL INJECTION
-    SQLINJECTION(
-        "sqlmap",
-        ""
-    ),
-
-    // REV/PWN
-    PWN(
-        "gdb",
-        ""
+    DECRYPT(
+        "fcrackzip",
+        "frackzip version 1.0, a fast/free zip password cracker.\n\nUSAGE: fcrackzip\n\t[-b] - use brute-force algorithm\n\t[-D] <path> - use a dictionary\n\n"
     );
 
     private final String command;
@@ -78,7 +70,7 @@ public enum EnumCommands {
     }
 
     public String getCommandInfo() {
-        return new StringBuilder(command).append(" - ").append(description).append("\n").toString();
+        return new StringBuilder(description).append("\n").toString();
     }
 
     public static EnumCommands fromString(final String command) {

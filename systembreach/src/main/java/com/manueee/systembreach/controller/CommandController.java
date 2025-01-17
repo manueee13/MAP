@@ -47,14 +47,14 @@ public class CommandController {
                 result = Commands.cdCommand(gameState.getFileSystem(), args);
                 break;
             case CAT:
-                result = Commands.catCommand();
+                result = Commands.catCommand(gameState.getFileSystem(), args);
                 break;
             case CLEAR:
                 Commands.clearCommand(terminal);
                 result = "";
                 break;
             case MANUAL:
-                result = Commands.manualCommand();
+                result = Commands.manualCommand(args);
                 break;
             default:
                 result = Commands.invalidCommand();

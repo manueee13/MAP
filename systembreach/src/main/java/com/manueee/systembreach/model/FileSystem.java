@@ -18,20 +18,6 @@ public class FileSystem {
     }
 
     /**
-     * Carica la struttura del file system da un file JSON.
-     * @param jsonFS il JSON che rappresenta il file system
-     */
-    public void loadFromJson(JsonObject jsonFS) {
-        if (jsonFS == null || !jsonFS.has("root")) {
-            System.err.println("Errore: JSON non valido. File System non caricato.");
-            return;
-        }
-        JsonObject rootNode = jsonFS.getAsJsonObject("root");
-        root = parseDirectory(rootNode, null);
-        currentDirectory = root;
-    }
-
-    /**
      * Mostra il contenuto della directory corrente o di una directory specificata quando viene passato il comando ls.
      * @param path il percorso della directory
      * @return il contenuto della directory
@@ -59,13 +45,41 @@ public class FileSystem {
      * @param path
      * @return <b>true</b> se la directory esiste, <b>false</b> altrimenti
      */
-    public boolean cd(String path) {
-        Directory dir = findDirectory(path);
-        if (dir == null) {
-            return false;
+    public String cd(String path) {
+        FSNode node = findNode(path);
+        if (node == null) {
+            return "NOEXIST";
         }
-        currentDirectory = dir;
-        return true;
+        if (node instanceof File) {
+            return "NOTDIR";
+        }
+        currentDirectory = (Directory) node;
+        return "OK";
+    }
+
+    public String cat(String path) {
+        FSNode node = findNode(path);
+        if (node == null) {
+            return "NOEXIST";
+        }
+        if (node instanceof Directory) {
+            return "NOTFILE";
+        }
+        return ((File) node).getContent();
+    }
+
+    /**
+     * Carica la struttura del file system da un file JSON.
+     * @param jsonFS il JSON che rappresenta il file system
+     */
+    public void loadFromJson(JsonObject jsonFS) {
+        if (jsonFS == null || !jsonFS.has("root")) {
+            System.err.println("Errore: JSON non valido. File System non caricato.");
+            return;
+        }
+        JsonObject rootNode = jsonFS.getAsJsonObject("root");
+        root = parseDirectory(rootNode, null);
+        currentDirectory = root;
     }
 
     /**
@@ -74,13 +88,13 @@ public class FileSystem {
      * @param path Assegna il percorso del file
      * @param content Restituisce il contenuto del file
      */
-    public void createFile(String path, String content) {
+    public void createFile(String path, String content, String type) {
         String fileName = path.substring(path.lastIndexOf("/") + 1);
         String parentPath = path.substring(0, path.lastIndexOf("/"));
 
         Directory parentDir = findDirectory(parentPath);
         if (parentDir != null) {
-            parentDir.children.put(fileName, new File(fileName, parentDir, content));
+            parentDir.children.put(fileName, new File(fileName, parentDir, content, type));
         } else {
             throw new IllegalArgumentException("createFile: cannot create file '"
                     + path
@@ -153,13 +167,17 @@ public class FileSystem {
             for (String childName : children.keySet()) {
                 JsonObject childJson = children.getAsJsonObject(childName);
                 childJson.addProperty("name", childName);
-
-                if ("file".equals(childJson.get("type").getAsString())) {
-                    String content = childJson.has("content") ? childJson.get("content").getAsString() : "";
-                    dir.children.put(childName, new File(childName, dir, content));
-                } else if ("directory".equals(childJson.get("type").getAsString())) {
-                    Directory childDir = parseDirectory(childJson, dir);
-                    dir.children.put(childName, childDir);
+                String type = childJson.get("type").getAsString();
+                
+                switch(type) {
+                    case "directory":
+                        Directory childDir = parseDirectory(childJson, dir);
+                        dir.children.put(childName, childDir);
+                        break;
+                    default:
+                        String content = childJson.has("content") ? childJson.get("content").getAsString() : "";
+                        dir.children.put(childName, new File(childName, dir, content, type));
+                        break;
                 }
             }
         }
@@ -171,10 +189,16 @@ public class FileSystem {
     private abstract class FSNode {
         protected String name;
         protected Directory parent;
+        protected String type;
 
-        public FSNode(String name, Directory parent) {
+        public FSNode(String name, Directory parent, String type) {
             this.name = name;
             this.parent = parent;
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
         }
 
         public String getName() {
@@ -185,8 +209,8 @@ public class FileSystem {
     private class File extends FSNode {
         private String content;
 
-        public File(String name, Directory parent, String content) {
-            super(name, parent);
+        public File(String name, Directory parent, String content, String type) {
+            super(name, parent, type);
             this.content = content;
         }
 
@@ -199,7 +223,7 @@ public class FileSystem {
         private Map<String, FSNode> children = new HashMap<>();
 
         public Directory(String name, Directory parent) {
-            super(name, parent);
+            super(name, parent, "directory");
         }
 
         public Map<String, FSNode> getChildren() {

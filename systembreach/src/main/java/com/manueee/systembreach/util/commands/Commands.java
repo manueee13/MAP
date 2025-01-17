@@ -43,22 +43,53 @@ public final class Commands {
         if (path == null || path.trim().isEmpty()) {
             return "cd: missing operand";
         }
-        if (!fs.cd(path)) {
-            return "cd: " + path + ": No such file or directory";
+        String result = fs.cd(path);
+        switch (result) {
+            case "NOEXIST":
+                return "cd: " + path + ": No such file or directory";
+            case "NOTDIR":
+                return "cd: " + path + ": Not a directory";
+            case "OK":
+                return "";
+            default:
+                return "cd: unknown error";
         }
-        return "";
     }
 
-    public static String catCommand() {
-        return "cat";
+    public static String catCommand(FileSystem fs, String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return "cat: missing operand";
+        }
+
+        String result = fs.cat(path);
+        switch (result) {
+            case "NOEXIST":
+                return "cat: " + path + ": No such file or directory";
+            case "NOTFILE":
+                return "cat: " + path + ": Is a directory";
+            default:
+                return result;
+        }
+
     }
 
     public static void clearCommand(Terminal terminal) {
         terminal.clearOutputBuffer();
     }
 
-    public static String manualCommand() {
-        return "man";
+    public static String manualCommand(String cmd) {
+        if (cmd == null || cmd.trim().isEmpty()) {
+            StringBuilder result = new StringBuilder();
+            Stream.of(EnumCommands.values()).filter(command -> !command.equals(EnumCommands.INVALID)).forEach(command -> result.append(command.getCommandInfo()));
+        return result.toString();
+        }
+
+        EnumCommands command = EnumCommands.fromString(cmd);
+        if (cmd.equals(EnumCommands.INVALID.toString())) {
+            return "man: " + cmd + ": No manual entry or invalid command";
+        }
+
+        return command.getCommandInfo();
     }
 
     public static String vpnCommand() {
