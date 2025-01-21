@@ -2,8 +2,10 @@ package com.manueee.systembreach.controller;
 
 import com.manueee.systembreach.model.GameState;
 import com.manueee.systembreach.model.GameTimer;
+import com.manueee.systembreach.model.Mail;
 import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.view.GameView;
+import com.manueee.systembreach.view.MailView;
 
 /**
  * <h1>Classe GameController</h1>
@@ -17,26 +19,30 @@ public class GameController implements GameTimer.TimerListener {
     private GameView gameView;
     private GameTimer gameTimer;
     private CommandController commandController;
-
+    private int questIndex;
+    
     /**
      * <code>GameController</code>
      * Costruttore per la classe GameController.
      * @param isNewGame booleano se carica un nuova sessione o una salvata
      */
-    public GameController(boolean isNewGame) {
+    public GameController(boolean isNewGame, int questIndex) {
         if (isNewGame) {
-            this.gameState = new GameState();
+            this.gameState = new GameState(questIndex);
             this.commandController = new CommandController(new Terminal(), gameState);
-            this.gameView = new GameView(commandController);
+            this.gameView = new GameView(commandController, this);
             this.gameTimer = new GameTimer(TIMER_DURATION, this);
             initializeGame();
             gameView.setVisible(true);
+            notifyNewMail(questIndex);
         } else {
             // TODO: Carica sessione dal file salvataggio
             /*
             this.gameState = loadGameState();
             this.gameView = new GameView();
             initializeGame();
+            gameView.setVisible(true);
+            viewMail(questIndex);
             */
         }
     }
@@ -57,5 +63,19 @@ public class GameController implements GameTimer.TimerListener {
     public void onTimeOut() {
         gameState.setGameOver(true);
         //gameView.showGameOverDialog();
+    }
+
+    private void notifyNewMail(int questId) {
+        Mail mail = gameState.getMail(questId);
+        gameView.addMailEntry(questId, mail.getSender(), mail.getObject());
+    }
+
+    public void viewMail(int index) {
+        Mail mail = gameState.getMail(index);
+        String sender = mail.getSender();
+        String object = mail.getObject();
+        String content = mail.getContent();
+        MailView mailView = new MailView(gameView, sender, object, content);
+        mailView.setVisible(true);
     }
 }

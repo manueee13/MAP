@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileSystem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">systembreach</a> &gt; <a href="index.source.html" class="el_package">com.manueee.systembreach.model</a> &gt; <span class="el_source">FileSystem.java</span></div><h1>FileSystem.java</h1><pre class="source lang-java linenums">package com.manueee.systembreach.model;
+
+import com.google.gson.JsonObject;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * &lt;h1&gt;FileSystem&lt;/h1&gt;
+ * Classe &lt;b&gt;model&lt;/b&gt; per la gestione del file system di gioco.
+ */
+public class FileSystem {
+    private Directory root;
+    private Directory currentDirectory;
+
+<span class="nc" id="L15">    public FileSystem() {</span>
+<span class="nc" id="L16">        root = new Directory(&quot;/&quot;, null);</span>
+<span class="nc" id="L17">        currentDirectory = root;</span>
+<span class="nc" id="L18">    }</span>
+
+    /**
+     * Mostra il contenuto della directory corrente o di una directory specificata quando viene passato il comando ls.
+     * @param path il percorso della directory
+     * @return il contenuto della directory
+     */
+    public String ls(String path) {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        if (path == null || path.trim().isEmpty()) {</span>
+<span class="nc" id="L27">            return String.join(&quot; &quot;, currentDirectory.children.keySet());</span>
+        }
+
+<span class="nc" id="L30">        FSNode node = findNode(path);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (node == null) {</span>
+<span class="nc" id="L32">            return &quot;ls: cannot access '&quot; + path + &quot;': No such file or directory&quot;;</span>
+        }
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (node instanceof Directory) {</span>
+<span class="nc" id="L36">            Directory dir = (Directory) node;</span>
+<span class="nc" id="L37">            return String.join(&quot; &quot;, dir.children.keySet());</span>
+        } else {
+<span class="nc" id="L39">            return node.getName();</span>
+        }
+    }
+
+    /**
+     * Cambia percorso della directory corrente.
+     * @param path
+     * @return &lt;b&gt;true&lt;/b&gt; se la directory esiste, &lt;b&gt;false&lt;/b&gt; altrimenti
+     */
+    public String cd(String path) {
+<span class="nc" id="L49">        FSNode node = findNode(path);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (node == null) {</span>
+<span class="nc" id="L51">            return &quot;NOEXIST&quot;;</span>
+        }
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (node instanceof File) {</span>
+<span class="nc" id="L54">            return &quot;NOTDIR&quot;;</span>
+        }
+<span class="nc" id="L56">        currentDirectory = (Directory) node;</span>
+<span class="nc" id="L57">        return &quot;OK&quot;;</span>
+    }
+
+    public String cat(String path) {
+<span class="nc" id="L61">        FSNode node = findNode(path);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (node == null) {</span>
+<span class="nc" id="L63">            return &quot;NOEXIST&quot;;</span>
+        }
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (node instanceof Directory) {</span>
+<span class="nc" id="L66">            return &quot;NOTFILE&quot;;</span>
+        }
+<span class="nc" id="L68">        return ((File) node).getContent();</span>
+    }
+
+    /**
+     * Carica la struttura del file system da un file JSON.
+     * @param jsonFS il JSON che rappresenta il file system
+     */
+    public void loadFromJson(JsonObject jsonFS) {
+<span class="nc bnc" id="L76" title="All 4 branches missed.">        if (jsonFS == null || !jsonFS.has(&quot;root&quot;)) {</span>
+<span class="nc" id="L77">            System.err.println(&quot;Errore: JSON non valido. File System non caricato.&quot;);</span>
+<span class="nc" id="L78">            return;</span>
+        }
+<span class="nc" id="L80">        JsonObject rootNode = jsonFS.getAsJsonObject(&quot;root&quot;);</span>
+<span class="nc" id="L81">        root = parseDirectory(rootNode, null);</span>
+<span class="nc" id="L82">        currentDirectory = root;</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * &lt;code&gt;createFile&lt;/code&gt;
+     * Crea un file in una directory specifica.
+     * @param path Assegna il percorso del file
+     * @param content Restituisce il contenuto del file
+     */
+    public void createFile(String path, String content, String type) {
+<span class="nc" id="L92">        String fileName = path.substring(path.lastIndexOf(&quot;/&quot;) + 1);</span>
+<span class="nc" id="L93">        String parentPath = path.substring(0, path.lastIndexOf(&quot;/&quot;));</span>
+
+<span class="nc" id="L95">        Directory parentDir = findDirectory(parentPath);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (parentDir != null) {</span>
+<span class="nc" id="L97">            parentDir.children.put(fileName, new File(fileName, parentDir, content, type));</span>
+        } else {
+<span class="nc" id="L99">            throw new IllegalArgumentException(&quot;createFile: cannot create file '&quot;</span>
+                    + path
+                    + &quot;': No such file or directory&quot;);
+        }
+<span class="nc" id="L103">    }</span>
+
+    private Directory findDirectory(String path) {
+<span class="nc" id="L106">        FSNode node = findNode(path);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        return node instanceof Directory ? (Directory) node : null;</span>
+    }
+
+    private FSNode findNode(String path) {
+        // Se path è vuoto o &quot;.&quot; ritorna la directory corrente
+<span class="nc bnc" id="L112" title="All 6 branches missed.">        if (path == null || path.isEmpty() || &quot;.&quot;.equals(path)) {</span>
+<span class="nc" id="L113">            return currentDirectory;</span>
+        }
+
+        // Se path è &quot;..&quot; vai al parent se esiste
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (&quot;..&quot;.equals(path)) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            return currentDirectory.parent != null ? currentDirectory.parent : currentDirectory;</span>
+        }
+    
+        // Determina il punto di partenza
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        FSNode current = path.startsWith(&quot;/&quot;) ? root : currentDirectory;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        path = path.startsWith(&quot;/&quot;) ? path.substring(1) : path;</span>
+    
+        // Dividi il path e naviga
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (String part : path.split(&quot;/&quot;)) {</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">            if (part.isEmpty() || part.equals(&quot;.&quot;)) {</span>
+<span class="nc" id="L128">                continue;</span>
+            }
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (part.equals(&quot;..&quot;)) {</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (current.parent != null) {</span>
+<span class="nc" id="L132">                    current = current.parent;</span>
+                }
+                continue;
+            }
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            if (!(current instanceof Directory)) {</span>
+<span class="nc" id="L137">                return null;</span>
+            }
+<span class="nc" id="L139">            Directory dir = (Directory) current;</span>
+<span class="nc" id="L140">            FSNode next = dir.children.get(part);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (next == null) {</span>
+<span class="nc" id="L142">                return null;</span>
+            }
+<span class="nc" id="L144">            current = next;</span>
+        }
+<span class="nc" id="L146">        return current;</span>
+    }
+
+    /**
+     * Analizza il JSON e crea una directory.
+     *
+     * @param dirJson il JSON della directory.
+     * @param parent  la directory genitore.
+     * @return la directory creata.
+     */
+    private Directory parseDirectory(JsonObject dirJson, Directory parent) {
+<span class="nc bnc" id="L157" title="All 6 branches missed.">        if (dirJson == null || !dirJson.has(&quot;name&quot;) || !dirJson.has(&quot;type&quot;)|| </span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            !&quot;directory&quot;.equals(dirJson.get(&quot;type&quot;).getAsString())) {</span>
+<span class="nc" id="L159">            return null;</span>
+        }
+
+<span class="nc" id="L162">        String name = dirJson.get(&quot;name&quot;).getAsString();</span>
+<span class="nc" id="L163">        Directory dir = new Directory(name, parent);</span>
+
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (dirJson.has(&quot;children&quot;)) {</span>
+<span class="nc" id="L166">            JsonObject children = dirJson.getAsJsonObject(&quot;children&quot;);</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            for (String childName : children.keySet()) {</span>
+<span class="nc" id="L168">                JsonObject childJson = children.getAsJsonObject(childName);</span>
+<span class="nc" id="L169">                childJson.addProperty(&quot;name&quot;, childName);</span>
+<span class="nc" id="L170">                String type = childJson.get(&quot;type&quot;).getAsString();</span>
+                
+<span class="nc bnc" id="L172" title="All 2 branches missed.">                switch(type) {</span>
+                    case &quot;directory&quot;:
+<span class="nc" id="L174">                        Directory childDir = parseDirectory(childJson, dir);</span>
+<span class="nc" id="L175">                        dir.children.put(childName, childDir);</span>
+<span class="nc" id="L176">                        break;</span>
+                    default:
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                        String content = childJson.has(&quot;content&quot;) ? childJson.get(&quot;content&quot;).getAsString() : &quot;&quot;;</span>
+<span class="nc" id="L179">                        dir.children.put(childName, new File(childName, dir, content, type));</span>
+                        break;
+                }
+<span class="nc" id="L182">            }</span>
+        }
+<span class="nc" id="L184">        return dir;</span>
+    }
+
+    // ========CLASSI NIDIFICATE========
+
+    private abstract class FSNode {
+        protected String name;
+        protected Directory parent;
+        protected String type;
+
+<span class="nc" id="L194">        public FSNode(String name, Directory parent, String type) {</span>
+<span class="nc" id="L195">            this.name = name;</span>
+<span class="nc" id="L196">            this.parent = parent;</span>
+<span class="nc" id="L197">            this.type = type;</span>
+<span class="nc" id="L198">        }</span>
+
+        public String getType() {
+<span class="nc" id="L201">            return type;</span>
+        }
+
+        public String getName() {
+<span class="nc" id="L205">            return name;</span>
+        }
+    }
+
+    private class File extends FSNode {
+        private String content;
+
+<span class="nc" id="L212">        public File(String name, Directory parent, String content, String type) {</span>
+<span class="nc" id="L213">            super(name, parent, type);</span>
+<span class="nc" id="L214">            this.content = content;</span>
+<span class="nc" id="L215">        }</span>
+
+        public String getContent() {
+<span class="nc" id="L218">            return content;</span>
+        }
+    }
+
+    private class Directory extends FSNode {
+<span class="nc" id="L223">        private Map&lt;String, FSNode&gt; children = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L225">        public Directory(String name, Directory parent) {</span>
+<span class="nc" id="L226">            super(name, parent, &quot;directory&quot;);</span>
+<span class="nc" id="L227">        }</span>
+
+        public Map&lt;String, FSNode&gt; getChildren() {
+<span class="nc" id="L230">            return children;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

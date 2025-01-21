@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Terminal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">systembreach</a> &gt; <a href="index.source.html" class="el_package">com.manueee.systembreach.model</a> &gt; <span class="el_source">Terminal.java</span></div><h1>Terminal.java</h1><pre class="source lang-java linenums">package com.manueee.systembreach.model;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * &lt;h2&gt;Terminal&lt;/h2&gt;
+ * Classe &lt;b&gt;model&lt;/b&gt; per la gestione del terminale.
+ */
+public class Terminal {
+    private List&lt;String&gt; commandHistory;
+    private List&lt;String&gt; outputBuffer;
+
+<span class="nc" id="L14">    public Terminal() {</span>
+<span class="nc" id="L15">        this.commandHistory = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L16">        this.outputBuffer = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L17">    }</span>
+
+    public void addCommand(String command) {
+<span class="nc" id="L20">        commandHistory.add(command);</span>
+<span class="nc" id="L21">    }</span>
+
+    public void addOutput(String output) {
+<span class="nc" id="L24">        outputBuffer.add(output);</span>
+<span class="nc" id="L25">    }</span>
+
+    public List&lt;String&gt; getCommandHistory() {
+<span class="nc" id="L28">        return new ArrayList&lt;&gt;(commandHistory);</span>
+    }
+    
+    public List&lt;String&gt; getOutputBuffer() {
+<span class="nc" id="L32">        return new ArrayList&lt;&gt;(outputBuffer);</span>
+    }
+
+    public void clearOutputBuffer() {
+<span class="nc" id="L36">        outputBuffer.clear();</span>
+<span class="nc" id="L37">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Commands.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">systembreach</a> &gt; <a href="index.source.html" class="el_package">com.manueee.systembreach.util.commands</a> &gt; <span class="el_source">Commands.java</span></div><h1>Commands.java</h1><pre class="source lang-java linenums">package com.manueee.systembreach.util.commands;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.manueee.systembreach.model.FileSystem;
+import com.manueee.systembreach.model.Terminal;
+
+/**
+ * &lt;h2&gt;Commands&lt;/h2&gt;
+ * Funzioni dei comandi del gioco.
+ */
+public final class Commands {
+
+    private Commands() {
+
+    }
+
+    /**
+     * Stamnpa l'errore di comando non valido.
+     * @return l'errore di comando non valido
+     */
+    public static String invalidCommand() {
+<span class="nc" id="L24">        return &quot;Non esiste nessun comando con questo nome, digita 'help' per l'elenco dei comandi disponibili&quot;;</span>
+    }
+
+    /**
+     * Stampa la lista comandi disponibili.
+     * @return la lista dei comandi disponibili
+     */
+    public static String listCommand() {
+        //TODO: Fare in modo che visualizzi i comandi disponibili solo nella sessione corrente e non tutti i comandi.
+<span class="nc" id="L33">        return Stream.of(EnumCommands.values())</span>
+<span class="nc" id="L34">                .map(EnumCommands::getCommand)</span>
+<span class="nc" id="L35">                .collect(Collectors.joining(&quot; &quot;));</span>
+    }
+
+    public static String lsCommand(FileSystem fs, String path) {
+<span class="nc" id="L39">        return fs.ls(path);</span>
+    }
+
+    public static String cdCommand(FileSystem fs, String path) {
+<span class="nc bnc" id="L43" title="All 4 branches missed.">        if (path == null || path.trim().isEmpty()) {</span>
+<span class="nc" id="L44">            return &quot;cd: missing operand&quot;;</span>
+        }
+<span class="nc" id="L46">        String result = fs.cd(path);</span>
+<span class="nc bnc" id="L47" title="All 4 branches missed.">        switch (result) {</span>
+            case &quot;NOEXIST&quot;:
+<span class="nc" id="L49">                return &quot;cd: &quot; + path + &quot;: No such file or directory&quot;;</span>
+            case &quot;NOTDIR&quot;:
+<span class="nc" id="L51">                return &quot;cd: &quot; + path + &quot;: Not a directory&quot;;</span>
+            case &quot;OK&quot;:
+<span class="nc" id="L53">                return &quot;&quot;;</span>
+            default:
+<span class="nc" id="L55">                return &quot;cd: unknown error&quot;;</span>
+        }
+    }
+
+    public static String catCommand(FileSystem fs, String path) {
+<span class="nc bnc" id="L60" title="All 4 branches missed.">        if (path == null || path.trim().isEmpty()) {</span>
+<span class="nc" id="L61">            return &quot;cat: missing operand&quot;;</span>
+        }
+
+<span class="nc" id="L64">        String result = fs.cat(path);</span>
+<span class="nc bnc" id="L65" title="All 3 branches missed.">        switch (result) {</span>
+            case &quot;NOEXIST&quot;:
+<span class="nc" id="L67">                return &quot;cat: &quot; + path + &quot;: No such file or directory&quot;;</span>
+            case &quot;NOTFILE&quot;:
+<span class="nc" id="L69">                return &quot;cat: &quot; + path + &quot;: Is a directory&quot;;</span>
+            default:
+<span class="nc" id="L71">                return result;</span>
+        }
+
+    }
+
+    public static void clearCommand(Terminal terminal) {
+<span class="nc" id="L77">        terminal.clearOutputBuffer();</span>
+<span class="nc" id="L78">    }</span>
+
+    public static String manualCommand(String cmd) {
+<span class="nc bnc" id="L81" title="All 4 branches missed.">        if (cmd == null || cmd.trim().isEmpty()) {</span>
+<span class="nc" id="L82">            StringBuilder result = new StringBuilder();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            Stream.of(EnumCommands.values()).filter(command -&gt; !command.equals(EnumCommands.INVALID)).forEach(command -&gt; result.append(command.getCommandInfo()));</span>
+<span class="nc" id="L84">        return result.toString();</span>
+        }
+
+<span class="nc" id="L87">        EnumCommands command = EnumCommands.fromString(cmd);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (cmd.equals(EnumCommands.INVALID.toString())) {</span>
+<span class="nc" id="L89">            return &quot;man: &quot; + cmd + &quot;: No manual entry or invalid command&quot;;</span>
+        }
+
+<span class="nc" id="L92">        return command.getCommandInfo();</span>
+    }
+
+    public static String vpnCommand() {
+        // TODO
+<span class="nc" id="L97">        return &quot;wp-quick&quot;;</span>
+    }
+
+    public static String sqlCommand() {
+        // TODO
+<span class="nc" id="L102">        return &quot;sql&quot;;</span>
+    }
+
+    public static String pwnCommand() {
+        // TODO
+<span class="nc" id="L107">        return &quot;pwn&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

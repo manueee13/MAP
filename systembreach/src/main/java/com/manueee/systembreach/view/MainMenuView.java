@@ -138,7 +138,7 @@ public class MainMenuView extends JFrame{
         dispose();
 
         // Inizializza il gioco
-        new GameController(true);
+        new GameController(true, 1);
     }
 
     private void loadGame() {

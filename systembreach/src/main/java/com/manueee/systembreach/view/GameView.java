@@ -1,7 +1,11 @@
 package com.manueee.systembreach.view;
 
 import com.manueee.systembreach.util.fonts.FontUtils;
+
+import javafx.scene.layout.Border;
+
 import com.manueee.systembreach.controller.CommandController;
+import com.manueee.systembreach.controller.GameController;
 
 import javax.swing.*;
 
@@ -17,15 +21,16 @@ public class GameView extends JFrame {
     private JPanel gamePanel;
     private JTextArea terminalPanel;
     private JLabel timerLabel;
-    private JTextArea infoPanel;
+    private JPanel infoPanel;
     private Font customFont;
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private JSlider musicSlider;
     private JSlider soundSlider;
     private CommandController commandController;
+    private GameController gameController;
 
-    public GameView(CommandController commandController) {
+    public GameView(CommandController commandController, GameController gameController) {
         setTitle("System Breach");
         setSize(1280, 960);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +54,7 @@ public class GameView extends JFrame {
         setVisible(true);
 
         this.commandController = commandController;
+        this.gameController = gameController;
     }
 
     private void menuBar() {
@@ -164,7 +170,7 @@ public class GameView extends JFrame {
         terminalPanel.setWrapStyleWord(true);
 
         // Prompt iniziale
-        terminalPanel.setText("user@system:~$ ");
+        terminalPanel.setText("user@system:~/ $ ");
 
         terminalPanel.addKeyListener(new KeyListener() {
             private StringBuilder commandBuffer = new StringBuilder();
@@ -188,12 +194,11 @@ public class GameView extends JFrame {
 
                     // Aggiungi nuova riga
                     terminalPanel.append("\n");
-                    // Esegui il comandol
+                    // Esegui il comando
                     String output = commandController.processCommand(command);
                     terminalPanel.append(output);
-
                     // Nuovo prompt
-                    terminalPanel.append("\nuser@system:~$ ");
+                    terminalPanel.append("\nuser@system:~/ $ ");
 
                     // Reset del buffer
                     commandBuffer.setLength(0);
@@ -222,14 +227,17 @@ public class GameView extends JFrame {
     }
 
     private void infoPanel() {
-        infoPanel = new JTextArea();
-        infoPanel.setEditable(false);
-        infoPanel.setFont(customFont);
+        infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(Color.BLACK);
-        infoPanel.setForeground(Color.GREEN);
-        infoPanel.setCaretColor(Color.GREEN);
-        infoPanel.setMargin(new Insets(10, 10, 10, 10));
-        infoPanel.setText("Lorem ipsum dolor sit amet.");
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                
+        // Scroll pane principale
+        JScrollPane scrollPane = new JScrollPane(infoPanel);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 2));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getViewport().setBackground(Color.BLACK);
+        scrollPane.setPreferredSize(new Dimension(300, getHeight()));
     }
 
     private void timerLabel() {
@@ -292,29 +300,44 @@ public class GameView extends JFrame {
         slider.setBackground(Color.BLACK);
     }
 
-    /**
-     * @return Il pannello del terminale
-     */
-    public JTextArea getTerminalPanel() {
-        return terminalPanel;
-    }
-
-    /**
-     * @return Il pannello delle informazioni
-     */
-    public JTextArea getInfoPanel() {
-        return infoPanel;
-    }
-
-    /**
-     * @return L'etichetta del timer
-     */
-    public JLabel getTimerLabel() {
-        return timerLabel;
-    }
-
     public void updateTimer(String time) {
         SwingUtilities.invokeLater(() -> timerLabel.setText(time));
+    }
+
+    public void addMailEntry(int mailId, String sender, String object) {
+        JPanel mailPanel = new JPanel();
+        mailPanel.setLayout(new BoxLayout(mailPanel, BoxLayout.Y_AXIS));
+        mailPanel.setBackground(Color.BLACK);
+        mailPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 60, 60), 1), // bordo esterno grigio scuro
+            BorderFactory.createEmptyBorder(2, 2, 2, 2) // padding interno
+        ));
+        // Label per il mittente
+        JLabel senderLabel = new JLabel("> " + sender);
+        senderLabel.setFont(customFont.deriveFont(24));
+        senderLabel.setForeground(Color.GREEN);
+        senderLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Label per l'oggetto
+        JLabel objectLabel = new JLabel(object);
+        objectLabel.setFont(customFont.deriveFont(24));
+        objectLabel.setForeground(Color.GREEN);
+        objectLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        mailPanel.add(senderLabel);
+        mailPanel.add(Box.createVerticalStrut(2));  // Piccolo spazio tra le label
+        mailPanel.add(objectLabel);
+        
+        mailPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gameController.viewMail(mailId);
+            }
+        });
+        
+        infoPanel.add(mailPanel);
+        infoPanel.add(Box.createVerticalStrut(5));
+        infoPanel.revalidate();
+        infoPanel.repaint();
     }
 
     public void addStartTimerListener(ActionListener listener) {

@@ -1,13 +1,14 @@
 package com.manueee.systembreach.model;
 
+import com.manueee.systembreach.util.sessions.QuestUtils;
+import com.manueee.systembreach.util.sessions.SessionUtils;
+import com.manueee.systembreach.util.commands.EnumCommands;
+import com.manueee.systembreach.util.sessions.QuestUtils.Quest;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.manueee.systembreach.util.sessions.SessionUtils;
-import com.manueee.systembreach.util.commands.EnumCommands;
-
 /**
  * <h2>GameState</h2>
  * Classe <b>model</b> per la gestione dello stato del gioco.
@@ -17,12 +18,14 @@ public class GameState {
     private boolean isGameOver;
     private List<GameStateObserver> observers;
     private final Set<EnumCommands> availableCommands;
+    private int currentQuestId;
 
-    public GameState() {
+    public GameState(int currentQuestId) {
         this.isGameOver = false;
         this.observers = new ArrayList<>();
         this.fileSystem = SessionUtils.createNewSession();
         this.availableCommands = new HashSet<>();
+        this.currentQuestId = currentQuestId;
         initializeCommands();
     }
 
@@ -46,6 +49,10 @@ public class GameState {
     public void unlockCommand(EnumCommands command) {
         availableCommands.add(command);
         notifyObservers();
+    }
+
+    public Mail getMail(int questId) {
+        return QuestUtils.getMail(questId);
     }
 
     public interface GameStateObserver {

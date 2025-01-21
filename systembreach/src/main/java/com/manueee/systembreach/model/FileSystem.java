@@ -24,7 +24,6 @@ public class FileSystem {
      */
     public String ls(String path) {
         if (path == null || path.trim().isEmpty()) {
-            return String.join(" ", currentDirectory.children.keySet());
         }
 
         FSNode node = findNode(path);
@@ -110,7 +109,6 @@ public class FileSystem {
     private FSNode findNode(String path) {
         // Se path è vuoto o "." ritorna la directory corrente
         if (path == null || path.isEmpty() || ".".equals(path)) {
-            return currentDirectory;
         }
 
         // Se path è ".." vai al parent se esiste

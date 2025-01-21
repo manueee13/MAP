@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">systembreach</a> &gt; <a href="index.source.html" class="el_package">com.manueee.systembreach.view</a> &gt; <span class="el_source">GameView.java</span></div><h1>GameView.java</h1><pre class="source lang-java linenums">package com.manueee.systembreach.view;
+
+import com.manueee.systembreach.util.fonts.FontUtils;
+import com.manueee.systembreach.controller.CommandController;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+/**
+ * &lt;h2&gt;GameView&lt;/h2&gt;
+ * Classe &lt;b&gt;view&lt;/b&gt; della finestra di gioco.
+ */
+public class GameView extends JFrame {
+    private JPanel gamePanel;
+    private JTextArea terminalPanel;
+    private JLabel timerLabel;
+    private JTextArea infoPanel;
+    private Font customFont;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private JSlider musicSlider;
+    private JSlider soundSlider;
+    private CommandController commandController;
+
+<span class="nc" id="L28">    public GameView(CommandController commandController) {</span>
+<span class="nc" id="L29">        setTitle(&quot;System Breach&quot;);</span>
+<span class="nc" id="L30">        setSize(1280, 960);</span>
+<span class="nc" id="L31">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L32">        setLocationRelativeTo(null);</span>
+
+<span class="nc" id="L34">        cardLayout = new CardLayout();</span>
+<span class="nc" id="L35">        mainPanel = new JPanel(cardLayout);</span>
+<span class="nc" id="L36">        mainPanel.setBackground(Color.BLACK);</span>
+
+<span class="nc" id="L38">        customFont = FontUtils.loadFont();</span>
+<span class="nc" id="L39">        menuBar();</span>
+        
+<span class="nc" id="L41">        gamePanel = gamePanel();</span>
+<span class="nc" id="L42">        JPanel optionsPanel = optionsPanel();</span>
+        
+<span class="nc" id="L44">        mainPanel.add(gamePanel, &quot;Game&quot;);</span>
+<span class="nc" id="L45">        mainPanel.add(optionsPanel, &quot;Options&quot;);</span>
+        
+<span class="nc" id="L47">        add(mainPanel);</span>
+<span class="nc" id="L48">        cardLayout.show(mainPanel, &quot;Game&quot;);</span>
+<span class="nc" id="L49">        setVisible(true);</span>
+
+<span class="nc" id="L51">        this.commandController = commandController;</span>
+<span class="nc" id="L52">    }</span>
+
+    private void menuBar() {
+<span class="nc" id="L55">        JMenuBar menuBar = new JMenuBar();</span>
+<span class="nc" id="L56">        menuBar.setBackground(Color.BLACK);</span>
+<span class="nc" id="L57">        menuBar.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80), 1));</span>
+
+<span class="nc" id="L59">        JMenu fileMenu = new JMenu(&quot;File&quot;);</span>
+<span class="nc" id="L60">        styleMenu(fileMenu);</span>
+        
+<span class="nc" id="L62">        JMenuItem saveItem = new JMenuItem(&quot;Salva sessione&quot;);</span>
+<span class="nc" id="L63">        JMenuItem loadItem = new JMenuItem(&quot;Carica sessione&quot;);</span>
+<span class="nc" id="L64">        JMenuItem exitItem = new JMenuItem(&quot;Esci&quot;);</span>
+        
+<span class="nc" id="L66">        styleMenuItem(saveItem);</span>
+<span class="nc" id="L67">        styleMenuItem(loadItem);</span>
+<span class="nc" id="L68">        styleMenuItem(exitItem);</span>
+
+<span class="nc" id="L70">        saveItem.addActionListener(e -&gt; saveSession());</span>
+<span class="nc" id="L71">        loadItem.addActionListener(e -&gt; loadSession());</span>
+<span class="nc" id="L72">        exitItem.addActionListener(e -&gt; System.exit(0));</span>
+
+<span class="nc" id="L74">        fileMenu.add(saveItem);</span>
+<span class="nc" id="L75">        fileMenu.add(loadItem);</span>
+<span class="nc" id="L76">        fileMenu.addSeparator();</span>
+<span class="nc" id="L77">        fileMenu.add(exitItem);</span>
+
+<span class="nc" id="L79">        JMenu optionsMenu = new JMenu(&quot;Opzioni&quot;);</span>
+<span class="nc" id="L80">        styleMenu(optionsMenu);</span>
+<span class="nc" id="L81">        optionsMenu.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L83">                cardLayout.show(mainPanel, &quot;Options&quot;);</span>
+<span class="nc" id="L84">            }</span>
+        });
+
+<span class="nc" id="L87">        JMenu helpMenu = new JMenu(&quot;Help&quot;);</span>
+<span class="nc" id="L88">        styleMenu(helpMenu);</span>
+<span class="nc" id="L89">        helpMenu.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L91">                new HelpDialog(GameView.this).setVisible(true);</span>
+<span class="nc" id="L92">            }</span>
+        });
+
+<span class="nc" id="L95">        menuBar.add(fileMenu);</span>
+<span class="nc" id="L96">        menuBar.add(optionsMenu);</span>
+<span class="nc" id="L97">        menuBar.add(helpMenu);</span>
+
+<span class="nc" id="L99">        setJMenuBar(menuBar);</span>
+<span class="nc" id="L100">    }</span>
+
+    private void styleMenu(JMenu menu) {
+<span class="nc" id="L103">        menu.setForeground(Color.GREEN);</span>
+<span class="nc" id="L104">        menu.setBackground(Color.BLACK);</span>
+<span class="nc" id="L105">        menu.setFont(customFont);</span>
+<span class="nc" id="L106">    }</span>
+
+    private void styleMenuItem(JMenuItem menuItem) {
+<span class="nc" id="L109">        menuItem.setForeground(Color.GREEN);</span>
+<span class="nc" id="L110">        menuItem.setBackground(Color.BLACK);</span>
+<span class="nc" id="L111">        menuItem.setFont(customFont);</span>
+<span class="nc" id="L112">    }</span>
+    /**
+     * Pannello di gioco
+     * @return
+     */
+    private JPanel gamePanel() {
+<span class="nc" id="L118">        JPanel panel = new JPanel(new BorderLayout(5, 5));</span>
+<span class="nc" id="L119">        panel.setBackground(Color.BLACK);</span>
+
+<span class="nc" id="L121">        Color borderColor = new Color(80, 80, 80);</span>
+
+        // Pannello sinistro (Terminal)
+<span class="nc" id="L124">        terminalPanel();</span>
+<span class="nc" id="L125">        JScrollPane terminalScrollPane = new JScrollPane(terminalPanel);</span>
+<span class="nc" id="L126">        terminalScrollPane.setBorder(BorderFactory.createLineBorder(borderColor, 3));</span>
+<span class="nc" id="L127">        terminalScrollPane.getViewport().setBackground(Color.BLACK);</span>
+<span class="nc" id="L128">        panel.add(terminalScrollPane, BorderLayout.CENTER);</span>
+
+        // Pannello destro (info + timer)
+<span class="nc" id="L131">        JPanel rightPanel = new JPanel(new BorderLayout(0, 5));</span>
+<span class="nc" id="L132">        rightPanel.setBackground(Color.BLACK);</span>
+<span class="nc" id="L133">        rightPanel.setBorder(BorderFactory.createLineBorder(borderColor, 3));</span>
+
+        // Info panel in alto
+<span class="nc" id="L136">        infoPanel();</span>
+<span class="nc" id="L137">        JScrollPane infoScrollPane = new JScrollPane(infoPanel);</span>
+<span class="nc" id="L138">        infoScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));</span>
+<span class="nc" id="L139">        infoScrollPane.getViewport().setBackground(Color.BLACK);</span>
+<span class="nc" id="L140">        rightPanel.add(infoScrollPane, BorderLayout.CENTER);</span>
+
+        // Timer in basso
+<span class="nc" id="L143">        timerLabel();</span>
+<span class="nc" id="L144">        JPanel timerPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L145">        timerPanel.setBackground(Color.BLACK);</span>
+<span class="nc" id="L146">        timerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 2));</span>
+<span class="nc" id="L147">        timerPanel.add(timerLabel, BorderLayout.CENTER);</span>
+<span class="nc" id="L148">        rightPanel.add(timerPanel, BorderLayout.SOUTH);</span>
+
+<span class="nc" id="L150">        panel.add(rightPanel, BorderLayout.EAST);</span>
+<span class="nc" id="L151">        rightPanel.setPreferredSize(new Dimension(getWidth() / 3, getHeight()));</span>
+
+<span class="nc" id="L153">        return panel;</span>
+    }
+
+    private void terminalPanel() {
+<span class="nc" id="L157">        terminalPanel = new JTextArea();</span>
+<span class="nc" id="L158">        terminalPanel.setFont(customFont);</span>
+<span class="nc" id="L159">        terminalPanel.setBackground(Color.BLACK);</span>
+<span class="nc" id="L160">        terminalPanel.setForeground(Color.GREEN);</span>
+<span class="nc" id="L161">        terminalPanel.setCaretColor(Color.GREEN);</span>
+<span class="nc" id="L162">        terminalPanel.setMargin(new Insets(10, 10, 10, 10));</span>
+<span class="nc" id="L163">        terminalPanel.setLineWrap(true);</span>
+<span class="nc" id="L164">        terminalPanel.setWrapStyleWord(true);</span>
+
+        // Prompt iniziale
+<span class="nc" id="L167">        terminalPanel.setText(&quot;user@system:~$ &quot;);</span>
+
+<span class="nc" id="L169">        terminalPanel.addKeyListener(new KeyListener() {</span>
+<span class="nc" id="L170">            private StringBuilder commandBuffer = new StringBuilder();</span>
+<span class="nc" id="L171">            private int lastPromptPosition = terminalPanel.getText().length();</span>
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Impedisci la cancellazione del prompt
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                if (terminalPanel.getCaretPosition() &lt; lastPromptPosition) {</span>
+<span class="nc" id="L177">                    e.consume();</span>
+<span class="nc" id="L178">                    terminalPanel.setCaretPosition(terminalPanel.getText().length());</span>
+<span class="nc" id="L179">                    return;</span>
+                }
+<span class="nc" id="L181">            }</span>
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                if (e.getKeyCode() == KeyEvent.VK_ENTER) {</span>
+<span class="nc" id="L186">                    e.consume();</span>
+<span class="nc" id="L187">                    String command = commandBuffer.toString().trim();</span>
+
+                    // Aggiungi nuova riga
+<span class="nc" id="L190">                    terminalPanel.append(&quot;\n&quot;);</span>
+                    // Esegui il comandol
+<span class="nc" id="L192">                    String output = commandController.processCommand(command);</span>
+<span class="nc" id="L193">                    terminalPanel.append(output);</span>
+
+                    // Nuovo prompt
+<span class="nc" id="L196">                    terminalPanel.append(&quot;\nuser@system:~$ &quot;);</span>
+
+                    // Reset del buffer
+<span class="nc" id="L199">                    commandBuffer.setLength(0);</span>
+<span class="nc" id="L200">                    lastPromptPosition = terminalPanel.getText().length();</span>
+<span class="nc" id="L201">                }</span>
+                // Gestione backspace
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                    if (terminalPanel.getCaretPosition() &lt;= lastPromptPosition) {</span>
+<span class="nc" id="L205">                        e.consume();</span>
+                    }
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                    else if (commandBuffer.length() &gt; 0) {</span>
+<span class="nc" id="L208">                        commandBuffer.setLength(commandBuffer.length() - 1);</span>
+                    }
+                }
+<span class="nc" id="L211">            }</span>
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Aggiorna il comando corrente con il testo dopo il prompt
+<span class="nc bnc" id="L216" title="All 4 branches missed.">                if (e.getKeyCode() != KeyEvent.VK_ENTER &amp;&amp; e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {</span>
+<span class="nc" id="L217">                    String text = terminalPanel.getText();</span>
+<span class="nc" id="L218">                    commandBuffer = new StringBuilder(text.substring(lastPromptPosition));</span>
+                }
+<span class="nc" id="L220">            }</span>
+        });
+<span class="nc" id="L222">    }</span>
+
+    private void infoPanel() {
+<span class="nc" id="L225">        infoPanel = new JTextArea();</span>
+<span class="nc" id="L226">        infoPanel.setEditable(false);</span>
+<span class="nc" id="L227">        infoPanel.setFont(customFont);</span>
+<span class="nc" id="L228">        infoPanel.setBackground(Color.BLACK);</span>
+<span class="nc" id="L229">        infoPanel.setForeground(Color.GREEN);</span>
+<span class="nc" id="L230">        infoPanel.setCaretColor(Color.GREEN);</span>
+<span class="nc" id="L231">        infoPanel.setMargin(new Insets(10, 10, 10, 10));</span>
+<span class="nc" id="L232">        infoPanel.setText(&quot;Lorem ipsum dolor sit amet.&quot;);</span>
+<span class="nc" id="L233">    }</span>
+
+    private void timerLabel() {
+<span class="nc" id="L236">        timerLabel = new JLabel(&quot;30:00&quot;);</span>
+<span class="nc" id="L237">        timerLabel.setFont(customFont);</span>
+<span class="nc" id="L238">        timerLabel.setForeground(Color.GREEN);</span>
+<span class="nc" id="L239">        timerLabel.setBackground(Color.BLACK);</span>
+<span class="nc" id="L240">        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);</span>
+<span class="nc" id="L241">        timerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</span>
+<span class="nc" id="L242">        timerLabel.setOpaque(true);</span>
+<span class="nc" id="L243">    }</span>
+
+    private JPanel optionsPanel() {
+<span class="nc" id="L246">        JPanel panel = new JPanel();</span>
+<span class="nc" id="L247">        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L248">        panel.setBackground(Color.BLACK);</span>
+
+<span class="nc" id="L250">        JLabel musicLabel = new JLabel(&quot;Musica&quot;);</span>
+<span class="nc" id="L251">        JLabel soundLabel = new JLabel(&quot;Sonori&quot;);</span>
+<span class="nc" id="L252">        musicLabel.setForeground(Color.GREEN);</span>
+<span class="nc" id="L253">        soundLabel.setForeground(Color.GREEN);</span>
+
+<span class="nc" id="L255">        Dimension sliderSize = new Dimension(300, 50);</span>
+
+<span class="nc" id="L257">        musicSlider = new JSlider(0, 100, 100);</span>
+<span class="nc" id="L258">        styleOptionSlider(musicSlider, sliderSize);</span>
+
+<span class="nc" id="L260">        soundSlider = new JSlider(0, 100, 100);</span>
+<span class="nc" id="L261">        styleOptionSlider(soundSlider, sliderSize);</span>
+
+<span class="nc" id="L263">        JButton backButton = new JButton(&quot;Indietro&quot;);</span>
+<span class="nc" id="L264">        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L265">        backButton.setForeground(Color.GREEN);</span>
+<span class="nc" id="L266">        backButton.setBackground(Color.BLACK);</span>
+<span class="nc" id="L267">        backButton.addActionListener(e -&gt; cardLayout.show(mainPanel, &quot;Game&quot;));</span>
+
+<span class="nc" id="L269">        musicLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L270">        soundLabel.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+
+<span class="nc" id="L272">        panel.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L273">        panel.add(musicLabel);</span>
+<span class="nc" id="L274">        panel.add(musicSlider);</span>
+<span class="nc" id="L275">        panel.add(Box.createVerticalStrut(20));</span>
+<span class="nc" id="L276">        panel.add(soundLabel);</span>
+<span class="nc" id="L277">        panel.add(soundSlider);</span>
+<span class="nc" id="L278">        panel.add(Box.createVerticalStrut(20));</span>
+<span class="nc" id="L279">        panel.add(backButton);</span>
+<span class="nc" id="L280">        panel.add(Box.createVerticalGlue());</span>
+
+<span class="nc" id="L282">        return panel;</span>
+    }
+
+    private void styleOptionSlider(JSlider slider, Dimension size) {
+<span class="nc" id="L286">        slider.setMajorTickSpacing(25);</span>
+<span class="nc" id="L287">        slider.setPaintTicks(true);</span>
+<span class="nc" id="L288">        slider.setPaintLabels(true);</span>
+<span class="nc" id="L289">        slider.setMaximumSize(size);</span>
+<span class="nc" id="L290">        slider.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L291">        slider.setForeground(Color.GREEN);</span>
+<span class="nc" id="L292">        slider.setBackground(Color.BLACK);</span>
+<span class="nc" id="L293">    }</span>
+
+    /**
+     * @return Il pannello del terminale
+     */
+    public JTextArea getTerminalPanel() {
+<span class="nc" id="L299">        return terminalPanel;</span>
+    }
+
+    /**
+     * @return Il pannello delle informazioni
+     */
+    public JTextArea getInfoPanel() {
+<span class="nc" id="L306">        return infoPanel;</span>
+    }
+
+    /**
+     * @return L'etichetta del timer
+     */
+    public JLabel getTimerLabel() {
+<span class="nc" id="L313">        return timerLabel;</span>
+    }
+
+    public void updateTimer(String time) {
+<span class="nc" id="L317">        SwingUtilities.invokeLater(() -&gt; timerLabel.setText(time));</span>
+<span class="nc" id="L318">    }</span>
+
+    public void addStartTimerListener(ActionListener listener) {
+        // Implementa la logica per aggiungere un listener al timer
+<span class="nc" id="L322">    }</span>
+
+    /**
+     * Salva la sessione corrente
+     */
+    private void saveSession() {
+        // Implementa la logica per salvare la sessione
+<span class="nc" id="L329">    }</span>
+
+    /**
+     * Carica una sessione salvata
+     */
+    private void loadSession() {
+        // Implementa la logica per caricare una sessione salvata
+<span class="nc" id="L336">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
