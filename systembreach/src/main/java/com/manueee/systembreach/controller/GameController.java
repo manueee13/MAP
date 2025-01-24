@@ -1,7 +1,7 @@
 package com.manueee.systembreach.controller;
 
 import com.manueee.systembreach.model.GameState;
-import com.manueee.systembreach.model.GameTimer;
+import com.manueee.systembreach.model.Timer;
 import com.manueee.systembreach.model.Mail;
 import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.view.GameView;
@@ -11,13 +11,13 @@ import com.manueee.systembreach.view.MailView;
  * <h1>Classe GameController</h1>
  * Classe <b>controller</b> per l'interazione tra {@link #gameView} e <b>model</b>.
  */
-public class GameController implements GameTimer.TimerListener {
+public class GameController implements Timer.TimerListener {
     private static final int TIMER_DURATION = 1800;  // 1800 = 30 minuti
     private static final int SECONDS_IN_A_MINUTE = 60;
 
     private GameState gameState;
     private GameView gameView;
-    private GameTimer gameTimer;
+    private Timer gameTimer;
     private CommandController commandController;
     private int questIndex;
     
@@ -31,7 +31,7 @@ public class GameController implements GameTimer.TimerListener {
             this.gameState = new GameState(questIndex);
             this.commandController = new CommandController(new Terminal(), gameState);
             this.gameView = new GameView(commandController, this);
-            this.gameTimer = new GameTimer(TIMER_DURATION, this);
+            this.gameTimer = new Timer(TIMER_DURATION, this);
             initializeGame();
             gameView.setVisible(true);
             notifyNewMail(questIndex);

@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
  * <h2>GameTimer</h2>
  * Classe <b>model</b> per la gestione del timer di gioco.
  */
-public class GameTimer implements Runnable {
+public class Timer implements Runnable {
     /**
      * Interfaccia per la gestione degli eventi del timer
      */
@@ -20,7 +20,7 @@ public class GameTimer implements Runnable {
     private Thread timerThread;
     private int currentTime;
 
-    public GameTimer(int seconds, TimerListener listener) {
+    public Timer(int seconds, TimerListener listener) {
         if (seconds <= 0) {
             throw new IllegalArgumentException("Timer must be greater than 0");
         }
