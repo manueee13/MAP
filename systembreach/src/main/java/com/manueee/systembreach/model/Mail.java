@@ -1,7 +1,5 @@
 package com.manueee.systembreach.model;
 
-//TODO: Implementare classe Mail
-
 public class Mail {
     private String sender;
     private String object;

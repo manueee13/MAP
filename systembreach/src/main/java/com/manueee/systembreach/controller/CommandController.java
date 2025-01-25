@@ -38,7 +38,7 @@ public class CommandController {
         String result;
         switch (cmd) {
             case LIST:
-                result = Commands.listCommand();
+                result = Commands.listCommand(gameState);
                 break;
             case LS:
                 result = Commands.lsCommand(gameState.getFileSystem(), args);
@@ -47,7 +47,7 @@ public class CommandController {
                 result = Commands.cdCommand(gameState.getFileSystem(), args);
                 break;
             case CAT:
-                result = Commands.catCommand(gameState.getFileSystem(), args);
+                result = Commands.catCommand(gameState, args);
                 break;
             case CLEAR:
                 Commands.clearCommand(terminal);
@@ -55,6 +55,9 @@ public class CommandController {
                 break;
             case MANUAL:
                 result = Commands.manualCommand(args);
+                break;
+            case DECRYPT:
+                result = Commands.decryptCommand(gameState, args);
                 break;
             default:
                 result = Commands.invalidCommand();

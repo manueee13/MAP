@@ -19,7 +19,7 @@ public class GameController implements Timer.TimerListener {
     private GameView gameView;
     private Timer gameTimer;
     private CommandController commandController;
-    private int questIndex;
+    //private int questIndex;
     
     /**
      * <code>GameController</code>
@@ -28,13 +28,13 @@ public class GameController implements Timer.TimerListener {
      */
     public GameController(boolean isNewGame, int questIndex) {
         if (isNewGame) {
-            this.gameState = new GameState(questIndex);
+            this.gameState = new GameState(questIndex, this);
             this.commandController = new CommandController(new Terminal(), gameState);
             this.gameView = new GameView(commandController, this);
             this.gameTimer = new Timer(TIMER_DURATION, this);
             initializeGame();
             gameView.setVisible(true);
-            notifyNewMail(questIndex);
+            notifyNewMail(gameState.getMail(questIndex), questIndex);
         } else {
             // TODO: Carica sessione dal file salvataggio
             /*
@@ -65,8 +65,7 @@ public class GameController implements Timer.TimerListener {
         //gameView.showGameOverDialog();
     }
 
-    private void notifyNewMail(int questId) {
-        Mail mail = gameState.getMail(questId);
+    public void notifyNewMail(Mail mail, int questId) {
         gameView.addMailEntry(questId, mail.getSender(), mail.getObject());
     }
 

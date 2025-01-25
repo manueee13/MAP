@@ -3,7 +3,7 @@ package com.manueee.systembreach.model;
 import com.manueee.systembreach.util.sessions.QuestUtils;
 import com.manueee.systembreach.util.sessions.SessionUtils;
 import com.manueee.systembreach.util.commands.EnumCommands;
-import com.manueee.systembreach.util.sessions.QuestUtils.Quest;
+import com.manueee.systembreach.controller.GameController;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -19,13 +19,15 @@ public class GameState {
     private List<GameStateObserver> observers;
     private final Set<EnumCommands> availableCommands;
     private int currentQuestId;
+    private final GameController gameController;
 
-    public GameState(int currentQuestId) {
+    public GameState(int currentQuestId, GameController gameController) {
         this.isGameOver = false;
         this.observers = new ArrayList<>();
         this.fileSystem = SessionUtils.createNewSession();
         this.availableCommands = new HashSet<>();
         this.currentQuestId = currentQuestId;
+        this.gameController = gameController;
         initializeCommands();
     }
 
@@ -40,6 +42,7 @@ public class GameState {
         availableCommands.add(EnumCommands.CAT);
         availableCommands.add(EnumCommands.CLEAR);
         availableCommands.add(EnumCommands.MANUAL);
+        availableCommands.add(EnumCommands.DECRYPT);
     }
 
     public boolean isCommandAvailable(EnumCommands command) {
@@ -76,5 +79,15 @@ public class GameState {
             this.isGameOver = gameOver;
             notifyObservers();
         }
+    }
+
+    public int getCurrentQuestId() {
+        return currentQuestId;
+    }
+
+    public void advanceQuest() {
+        currentQuestId++;
+        gameController.notifyNewMail(getMail(currentQuestId), currentQuestId);
+        notifyObservers();
     }
 }

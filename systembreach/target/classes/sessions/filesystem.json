@@ -12,7 +12,7 @@
                     },
                     "dictionary.txt": {
                         "type": "file",
-                        "content": "E' pieno di combinazioni di password, dalle più comuni a quelle più complesse\n"
+                        "content": "> E' pieno di combinazioni di password, dalle più comuni a quelle più complesse\n"
                     }
                 }
             },
@@ -21,27 +21,27 @@
                 "children": {
                     "ls": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     },
                     "cat": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     },
                     "cd": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     },
                     "man": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     },
                     "list": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     },
                     "clear": {
                         "type": "file",
-                        "content": "Non riesco a leggere, sembra un file binario"
+                        "content": "> Non riesco a leggere, sembra un file binario"
                     }
                 }
             },
@@ -57,11 +57,11 @@
                             },
                             "project_SB013": {
                                 "type": "file",
-                                "content": "Credo si tratti del malware, non riesco a fermarlo...\n"
+                                "content": "> Credo si tratti del malware, non riesco a fermarlo...\n"
                             },
                             "docs.zip": {
                                 "type": "archive",
-                                "content": "E' un archivio, ma sembra protetto con una password\n"
+                                "content": "> E' un archivio, ma sembra protetto con una password\n"
                             }
                         }
                     }

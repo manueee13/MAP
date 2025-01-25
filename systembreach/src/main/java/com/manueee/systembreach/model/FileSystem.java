@@ -68,6 +68,16 @@ public class FileSystem {
     }
 
     /**
+     * Controlla se un file è valido
+     * @param path il percorso del file
+     * @return <b>true</b> se il file esiste e, se specificato, è del tipo richiesto, <b>false</b> altrimenti
+     */
+    public boolean isValidFile(String path) {
+        FSNode node = findNode(path);
+        return node instanceof File;
+    }
+
+    /**
      * Carica la struttura del file system da un file JSON.
      * @param jsonFS il JSON che rappresenta il file system
      */
@@ -87,18 +97,22 @@ public class FileSystem {
      * @param path Assegna il percorso del file
      * @param content Restituisce il contenuto del file
      */
-    public void createFile(String path, String content, String type) {
+    public void createFile(String path, String content) {
         String fileName = path.substring(path.lastIndexOf("/") + 1);
         String parentPath = path.substring(0, path.lastIndexOf("/"));
 
         Directory parentDir = findDirectory(parentPath);
         if (parentDir != null) {
-            parentDir.children.put(fileName, new File(fileName, parentDir, content, type));
+            parentDir.children.put(fileName, new File(fileName, parentDir, content));
         } else {
             throw new IllegalArgumentException("createFile: cannot create file '"
                     + path
                     + "': No such file or directory");
         }
+    }
+    
+    public String getNode(String path) {
+        return findNode(path).getName();
     }
 
     private Directory findDirectory(String path) {
@@ -109,6 +123,7 @@ public class FileSystem {
     private FSNode findNode(String path) {
         // Se path è vuoto o "." ritorna la directory corrente
         if (path == null || path.isEmpty() || ".".equals(path)) {
+            return currentDirectory;
         }
 
         // Se path è ".." vai al parent se esiste
@@ -174,7 +189,7 @@ public class FileSystem {
                         break;
                     default:
                         String content = childJson.has("content") ? childJson.get("content").getAsString() : "";
-                        dir.children.put(childName, new File(childName, dir, content, type));
+                        dir.children.put(childName, new File(childName, dir, content));
                         break;
                 }
             }
@@ -187,16 +202,10 @@ public class FileSystem {
     private abstract class FSNode {
         protected String name;
         protected Directory parent;
-        protected String type;
 
-        public FSNode(String name, Directory parent, String type) {
+        public FSNode(String name, Directory parent) {
             this.name = name;
             this.parent = parent;
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
         }
 
         public String getName() {
@@ -207,8 +216,8 @@ public class FileSystem {
     private class File extends FSNode {
         private String content;
 
-        public File(String name, Directory parent, String content, String type) {
-            super(name, parent, type);
+        public File(String name, Directory parent, String content) {
+            super(name, parent);
             this.content = content;
         }
 
@@ -221,11 +230,7 @@ public class FileSystem {
         private Map<String, FSNode> children = new HashMap<>();
 
         public Directory(String name, Directory parent) {
-            super(name, parent, "directory");
-        }
-
-        public Map<String, FSNode> getChildren() {
-            return children;
+            super(name, parent);
         }
     }
 }

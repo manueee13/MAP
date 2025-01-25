@@ -1,14 +1,10 @@
 package com.manueee.systembreach.view;
 
 import com.manueee.systembreach.util.fonts.FontUtils;
-
-import javafx.scene.layout.Border;
-
 import com.manueee.systembreach.controller.CommandController;
 import com.manueee.systembreach.controller.GameController;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;

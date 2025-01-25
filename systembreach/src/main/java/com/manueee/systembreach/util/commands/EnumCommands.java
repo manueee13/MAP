@@ -43,14 +43,24 @@ public enum EnumCommands {
         "man <command> : Guida all'uso di un comando"
     ),
 
-    VPN(
-        "wp-quick",
-        "Connettiti alla VPN"
-    ),
-
     DECRYPT(
         "fcrackzip",
         "frackzip version 1.0, a fast/free zip password cracker.\n\nUSAGE: fcrackzip\n\t[-b] - use brute-force algorithm\n\t[-D] <path> - use a dictionary\n\n"
+    ),
+
+    CURL(
+        "curl",
+        "USAGE: curl\n\t[-u] <url> - URL to fetch\n\t[-o] <file> - Write output to <file>\n\t[-d] <data> - Send data in POST request\n\n"
+    ),
+
+    SQLINJECT(
+        "sqlmap",
+        "sqlmap {1.2.11#stable}, a SQL injection tool.\n\nUSAGE: sqlmap\n\t[-u] <url> - URL to test\n\t[-p] <param> - Parameter to test\n\n"
+    ),
+
+    REVERSE(
+        "objdump",
+        "USAGE: objdump\n\t[-d] <file> - Disassemble <file>\n\t[-s] <file> - Display sections of <file>\n\t[-t] <file> - Display symbol table of <file>\n\n"
     );
 
     private final String command;
