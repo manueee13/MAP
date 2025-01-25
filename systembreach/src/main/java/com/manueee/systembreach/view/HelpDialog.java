@@ -22,7 +22,7 @@ public class HelpDialog extends JDialog {
         
         StringBuilder text = new StringBuilder();
         text.append("╔════════════════════════════╗\n");
-        text.append("║                COMANDI SISTEMA               ║\n");  //TODO aggiustare questo spazio qui
+        text.append("║                COMANDI SISTEMA               ║\n");
         text.append("╚════════════════════════════╝\n");
         text.append("\n");
         text.append(String.format("%-15s%-35s\n", "COMANDO", "DESCRIZIONE"));
