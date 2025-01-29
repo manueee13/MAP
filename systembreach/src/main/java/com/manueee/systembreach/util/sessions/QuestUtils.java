@@ -37,7 +37,7 @@ public class QuestUtils {
         // Quest 1-2: Leggi la docs
         quests.add(new Quest(
             2,
-            new Mail("m4t3@d4rkm41l.onion", "B3n F4tT0!", "Non è stato cosi difficile in fondo.\nOra vedi cosa c'è nella documentazione, magari riusciamo a trovare un modo per fermarlo.")
+            new Mail("m4t3@d4rkm41l.onion", "B3n F4tT0!", "Non è era cosi difficile in fondo.\nOra vedi cosa c'è nella documentazione, magari riusciamo a trovare un modo per fermarlo.")
             //state -> state.hasExecutedCommand("cat /mnt/docs/documentation.txt")
         ));
 
@@ -64,9 +64,6 @@ public class QuestUtils {
             6,
             new Mail("m4t3@darkm41l.onion", "PwN tH3 M4lW4r3", "Non è rimasto molto tempo!\nIl malware ha generato un path nel sito: '/backend/fo49vm3nc092/SB013/'\nProva a far partire l'exploit tramite 'curl'.")
         ));
-    }
-
-    public QuestUtils() {
     }
 
     public static List<Quest> getQuests(int id) {

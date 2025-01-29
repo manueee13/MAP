@@ -6,7 +6,9 @@ import com.manueee.systembreach.model.Mail;
 import com.manueee.systembreach.model.Terminal;
 import com.manueee.systembreach.view.GameView;
 import com.manueee.systembreach.view.MailView;
+import com.manueee.systembreach.util.sessions.SessionUtils;
 
+import java.io.File;
 /**
  * <h1>Classe GameController</h1>
  * Classe <b>controller</b> per l'interazione tra {@link #gameView} e <b>model</b>.
@@ -19,31 +21,29 @@ public class GameController implements Timer.TimerListener {
     private GameView gameView;
     private Timer gameTimer;
     private CommandController commandController;
-    //private int questIndex;
     
     /**
      * <code>GameController</code>
      * Costruttore per la classe GameController.
      * @param isNewGame booleano se carica un nuova sessione o una salvata
      */
-    public GameController(boolean isNewGame, int questIndex) {
+    public GameController(boolean isNewGame, File loadFile) {
         if (isNewGame) {
-            this.gameState = new GameState(questIndex, this);
+            this.gameState = new GameState(1, this);
             this.commandController = new CommandController(new Terminal(), gameState);
             this.gameView = new GameView(commandController, this);
             this.gameTimer = new Timer(TIMER_DURATION, this);
             initializeGame();
             gameView.setVisible(true);
-            notifyNewMail(gameState.getMail(questIndex), questIndex);
+            notifyNewMail(gameState.getMail(1), 1);
         } else {
-            // TODO: Carica sessione dal file salvataggio
-            /*
-            this.gameState = loadGameState();
-            this.gameView = new GameView();
+            this.gameState = SessionUtils.loadSession(loadFile, this);
+            this.commandController = new CommandController(new Terminal(), gameState);
+            this.gameView = new GameView(commandController, this);
             initializeGame();
             gameView.setVisible(true);
-            viewMail(questIndex);
-            */
+            viewMail(gameState.getCurrentQuestId());
+            
         }
     }
 
@@ -65,6 +65,14 @@ public class GameController implements Timer.TimerListener {
         //gameView.showGameOverDialog();
     }
 
+    public int getTime() {
+        return gameTimer.getCurrentTime();
+    }
+
+    public void setTime(int time) {
+        this.gameTimer = new Timer(TIMER_DURATION, this);
+    }
+
     public void notifyNewMail(Mail mail, int questId) {
         gameView.addMailEntry(questId, mail.getSender(), mail.getObject());
     }
@@ -76,5 +84,14 @@ public class GameController implements Timer.TimerListener {
         String content = mail.getContent();
         MailView mailView = new MailView(gameView, sender, object, content);
         mailView.setVisible(true);
+    }
+
+    public void saveSession(File file) {
+        try {
+            SessionUtils.saveSession(gameState, file);
+            //gameView.showMessage("Sessione salvata correttamente.");
+        } catch (Exception e) {
+            System.err.println("Errore salvataggio sessione: " + e.getMessage());
+        }
     }
 }

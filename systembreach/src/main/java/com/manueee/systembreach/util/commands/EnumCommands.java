@@ -45,17 +45,17 @@ public enum EnumCommands {
 
     DECRYPT(
         "fcrackzip",
-        "frackzip version 1.0, a fast/free zip password cracker.\n\nUSAGE: fcrackzip\n\t[-b] - use brute-force algorithm\n\t[-D] <path> - use a dictionary\n\n"
+        "frackzip version 1.0, a fast/free zip password cracker.\n\nUSAGE: fcrackzip <args> <path>\n\t[-b] - use brute-force algorithm\n\t[-D] <path> - use a dictionary\n\n"
     ),
 
     CURL(
         "curl",
-        "USAGE: curl\n\t[-u] <url> - URL to fetch\n\t[-o] <file> - Write output to <file>\n\t[-d] <data> - Send data in POST request\n\n"
+        "USAGE: curl\n\t[-u] <url> - URL to fetch\n\t[-o] - Enable download mode\n\t[-d] <data> (example: -d param1=var1&param2=var2)- Send data in POST request\n\n"
     ),
 
     SQLINJECT(
         "sqlmap",
-        "sqlmap {1.2.11#stable}, a SQL injection tool.\n\nUSAGE: sqlmap\n\t[-u] <url> - URL to test\n\t[-p] <param> - Parameter to test\n\n"
+        "sqlmap {1.2.11#stable}, a SQL injection tool.\n\nUSAGE: sqlmap\n\t[-u] <url> - URL to test\n\t[--dbs] - Enumerate databases\n\t[-D] <database> - Target database\n\t[--tables] - Enumerate tables\n\t[-T] <table> - Target table\n\t[--dump] - Dump the table\n\n"
     ),
 
     REVERSE(

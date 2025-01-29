@@ -91,6 +91,35 @@ public class FileSystem {
         currentDirectory = root;
     }
 
+    public JsonObject toJson() {
+        JsonObject root = new JsonObject();
+        root.add("root", directoryToJson(this.root));
+        return root;
+    }
+
+    private JsonObject directoryToJson(Directory dir) {
+        JsonObject dirJson = new JsonObject();
+        dirJson.addProperty("type", "directory");
+        dirJson.addProperty("name", dir.getName());
+
+        JsonObject children = new JsonObject();
+        for (Map.Entry<String, FSNode> entry : dir.children.entrySet()) {
+            FSNode child = entry.getValue();
+            if (child instanceof Directory) {
+                children.add(entry.getKey(), directoryToJson((Directory) child));
+            } else {
+                File file = (File) child;
+                JsonObject fileJson = new JsonObject();
+                fileJson.addProperty("type", "file");
+                fileJson.addProperty("name", file.getName());
+                fileJson.addProperty("content", file.getContent());
+                children.add(entry.getKey(), fileJson);
+            }
+        }
+        dirJson.add("children", children);
+        return dirJson;
+    }
+
     /**
      * <code>createFile</code>
      * Crea un file in una directory specifica.
@@ -109,6 +138,39 @@ public class FileSystem {
                     + path
                     + "': No such file or directory");
         }
+    }
+
+    public void createDirectory(String path) {
+        String dirName = path.substring(path.lastIndexOf("/") + 1);
+        String parentPath = path.substring(0, path.lastIndexOf("/"));
+
+        Directory parentDir = findDirectory(parentPath);
+        if (parentDir != null) {
+            parentDir.children.put(dirName, new Directory(dirName, parentDir));
+        } else {
+            throw new IllegalArgumentException("createDirectory: cannot create directory '"
+                    + path
+                    + "': No such file or directory");
+        }
+    }
+
+    public String getCurrentPath() {
+        StringBuilder path = new StringBuilder();
+        Directory current = currentDirectory;
+
+        if (current == root) {
+            return "/";
+        }
+
+        while (current != root) {
+            if (current != root) {
+                path.insert(0, current.getName());
+                path.insert(0, "/");
+            }
+            current = current.parent;
+        }
+
+        return path.toString();
     }
     
     public String getNode(String path) {

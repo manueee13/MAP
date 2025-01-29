@@ -68,6 +68,13 @@ public class Timer implements Runnable {
         return currentTime;
     }
 
+    public void setCurrentTime(int time) {
+        if (time < 0) {
+            throw new IllegalArgumentException("Time must be greater than 0");
+        }
+        currentTime = time;
+    }
+
     public boolean isRunning() {
         return isRunning;
     }

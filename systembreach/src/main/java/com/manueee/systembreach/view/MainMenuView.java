@@ -3,7 +3,10 @@ package com.manueee.systembreach.view;
 import com.manueee.systembreach.controller.GameController;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
+import java.io.File;
 
 /**
  * <h2>MainMenuView</h2>
@@ -136,13 +139,38 @@ public class MainMenuView extends JFrame{
     private void startNewGame() {
         JOptionPane.showMessageDialog(this, "build alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
         dispose();
-
         // Inizializza il gioco
-        new GameController(true, 1);
+        new GameController(true, null);
     }
 
     private void loadGame() {
-        //TODO: Implementare caricamento partita
-        JOptionPane.showMessageDialog(this, "Funzione di caricamento non ancora implementata.");
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Carica sessione");
+    
+    // Aggiungi filtro per file .mntcrl
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "File di salvataggio (.mntcrl)", 
+        "mntcrl"
+    );
+    fileChooser.setFileFilter(filter);
+    
+    int returnValue = fileChooser.showOpenDialog(this);
+    if (returnValue == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        
+        // Verifica che il file esista
+        if (!selectedFile.exists()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Il file selezionato non esiste.",
+                "Errore",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        
+        dispose(); // Chiude il menu
+        new GameController(false, selectedFile); // Carica la sessione
     }
+}
 }

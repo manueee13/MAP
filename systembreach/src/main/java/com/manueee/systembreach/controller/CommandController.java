@@ -59,6 +59,12 @@ public class CommandController {
             case DECRYPT:
                 result = Commands.decryptCommand(gameState, args);
                 break;
+            case CURL:
+                result = Commands.curlCommand(gameState, args);
+                break;
+            case SQLINJECT:
+                result = Commands.sqlinjectCommand(args);
+                break;
             default:
                 result = Commands.invalidCommand();
         }

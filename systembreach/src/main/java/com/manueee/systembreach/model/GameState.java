@@ -54,6 +54,10 @@ public class GameState {
         notifyObservers();
     }
 
+    public HashSet<EnumCommands> getAvailableCommands() {
+        return new HashSet<>(availableCommands);
+    }
+
     public Mail getMail(int questId) {
         return QuestUtils.getMail(questId);
     }
@@ -89,5 +93,13 @@ public class GameState {
         currentQuestId++;
         gameController.notifyNewMail(getMail(currentQuestId), currentQuestId);
         notifyObservers();
+    }
+
+    public int getRemainingTime() {
+        return gameController.getTime();
+    }
+
+    public void setRemainingTime(int time) {
+        gameController.setTime(time);
     }
 }

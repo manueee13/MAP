@@ -5,10 +5,13 @@ import com.manueee.systembreach.controller.CommandController;
 import com.manueee.systembreach.controller.GameController;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 /**
  * <h2>GameView</h2>
  * Classe <b>view</b> della finestra di gioco.
@@ -344,13 +347,43 @@ public class GameView extends JFrame {
      * Salva la sessione corrente
      */
     private void saveSession() {
-        // Implementa la logica per salvare la sessione
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Salva sessione");
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("File di salvataggio (.mntcrl)", "mntcrl");
+        fileChooser.setFileFilter(filter);
+        int returnValue = fileChooser.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            if (!selectedFile.getName().endsWith(".mntcrl")) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + ".mntcrl");
+            }
+
+            if(selectedFile.exists()) {
+                int result = JOptionPane.showConfirmDialog(this, "Il file esiste già. Vuoi sovrascriverlo?", "Conferma sovrascrittura", JOptionPane.YES_NO_OPTION);
+                if(result != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+            gameController.saveSession(selectedFile);
+        }
     }
 
     /**
      * Carica una sessione salvata
      */
     private void loadSession() {
-        // Implementa la logica per caricare una sessione salvata
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Carica sessione");
+        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("File di salvataggio (.mntcrl)", "mntcrl");
+        fileChooser.setFileFilter(filter);
+        
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            dispose(); // Chiude la finestra corrente
+            new GameController(false, selectedFile); // Crea nuovo controller con sessione caricata
+        }
     }
 }

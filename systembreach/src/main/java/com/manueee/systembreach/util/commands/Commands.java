@@ -64,6 +64,10 @@ public final class Commands {
             return "cat: missing operand";
         }
 
+        if (path.equals("documentation.txt") && gameState.getCurrentQuestId() == 2) {
+            gameState.advanceQuest();
+        }
+
         String result = fs.cat(path);
         switch (result) {
             case "NOEXIST":
@@ -157,9 +161,11 @@ public final class Commands {
             if (currentQuestId == 1) {
                 gameState.advanceQuest();
                 gameState.unlockCommand(EnumCommands.SQLINJECT);
+                gameState.unlockCommand(EnumCommands.CURL);
+                fs.createDirectory("/mnt/sda1/docs");
                 fs.createFile(
-                    "/mnt/sda1/docs/confidentiality.txt",
-                    "CONFIDENZIALE\n\nIN CASO DI ESECUZIONE INVOLONTARIA DEL PROGRAMMA COLLEGARSI AL SITO ONION 'http://6h5b7q4op9jf2k1d.onion' E INSERIRE LE CREDENZIALI FORNITE."
+                    "/mnt/sda1/docs/documentation.txt",
+                    "...\n...\nIN CASO DI ESECUZIONE INVOLONTARIA DEL PROGRAMMA COLLEGARSI AL SITO ONION 'http://phantomorganization7xw3v.onion/program/SB013' E INSERIRE LE CREDENZIALI FORNITE."
                 );
                 return "fcrackzip: archive successfully decrypted. The content is allocated in the current directory.\n\n> C'è l'ho fatta! Ora devo leggere la documentazione!";
             }
@@ -169,13 +175,106 @@ public final class Commands {
     return "fcrackzip: unknown error";    
 }
 
-    public static String sqlCommand() {
-        // TODO
-        return "sql";
+    public static String curlCommand(GameState gameState, String args) {
+        if (args == null || args.trim().isEmpty()) {
+            return EnumCommands.CURL.getCommandInfo();
+        }
+
+        String[] params = args.trim().split("\\s+");
+        String regex = "http://[^/]+\\.[^/]+";
+
+        if (params.length >= 2 && params[0].equals("-u")) {
+            if (params[1].equals("http://phantomorganization7xw3v.onion/program/SB013")) {
+                if (params.length >= 3 && params[2].equals("-o")) {
+                    if (params.length >= 4 && !params[3].equals("-d")) {
+                        if (params[4].equals("username=us378&password=v93g@1!mv")) {
+                            gameState.getFileSystem().createFile("./", "SB013_debloat");
+                            gameState.advanceQuest();
+                            return "curl: download successful in the current directory.";
+                        } else {
+                            return "403 FORBIDDEN";
+                        }
+                    }
+                }
+                else if (params.length >= 3 && params[2].equals("-d")) {
+                    if (params[3].equals("username=us378&password=v93g@1!mv")) {
+                        return "> è entrato ma non ha fatto nulla... forse dovrei provare a scaricarlo";
+                    } else {
+                        return "403 FORBIDDEN";
+                    }
+                } else {
+                    return "curl: illegal operation";
+                }
+            } else if (params[1].equals("phantomorganization7xw3v.onion")) {
+                return "> è il sito dell'organizzazione, non posso fare nulla qui...";
+            } else if (params[1].matches(regex)) {
+                return "> Devo concentrarmi sul sito dell'organizzazione...";
+            } else {
+                return "curl: illegal URL";
+            }
+        }
+        return "curl: illegal operation";
     }
 
-    public static String pwnCommand() {
+    public static String sqlinjectCommand(String args) {
+        if (args == null || args.trim().isEmpty()) {
+            return EnumCommands.SQLINJECT.getCommandInfo();
+        }
+    
+        String[] params = args.trim().split("\\s+");
+    
+        // Controllo URL
+        if (params.length == 2 && params[0].equals("-u")) {
+            if (!"http://phantomorganization7xw3v.onion".equals(params[1])) {
+                return "> Forse dovrei concentrarmi sul sito dell'organizzazione...";
+            } else {
+                return "sqlmap: this site is vulnerable to SQL injection.";
+            }
+        }
+    
+        // Controllo database
+        if (params.length >= 3) {
+            if (params[2].equals("--dbs")) {
+                return "sqlmap:\n\n[0] databases\n[1] information_schema\n[2] SB013\n\n";
+            }
+    
+            if (params[2].equals("-D")) {
+                if (params.length >= 4 && params[3].equals("SB013")) {
+                    if (params.length >= 5) {
+                        if (params[4].equals("--tables")) {
+                            return "sqlmap:\n\n[0] CLIENT\n[1] USERS\n[2] PAYMENT\n\n";
+                        }
+                        if (params[4].equals("-T") && params.length >= 6) {
+                            if (params[5].equals("USERS")) {
+                                return "sqlmap: USERS:\n" +
+                                        "+-----------+-----------+\n" +
+                                        "| Username  | Password  |\n" +
+                                        "+-----------+-----------+\n" +
+                                        "| us378     | v93g@1!mv |\n" +
+                                        "+-----------+-----------+";
+                            } else if (params[5].equals("CLIENT")) {
+                                return "> Non avrei dubitato che ci fosserò clienti dietro ad organizzazioni governative...comunque non è queta la tabella con le credenziali che mi servono.";
+                            } else if (params[5].equals("PAYMENT")) {
+                                return "> Guarda che cifre da capogiro! Mi chiedo come faranno a cambiare tutti quei bitcoin...comunque non è questa la tabella con le credenziali";
+                            } else {
+                                return "sqlmap: unknown table";
+                            }
+                        }
+                    }
+                    return "sqlmap: illegal operation";
+                } else if (params.length >= 4 && (params[3].equals("information_schema") || params[3].equals("databases"))) {
+                    return "> Questo database non ha le tabelle che mi servono...";
+                } else {
+                    return "sqlmap: unknown database";
+                }
+            }
+        }
+    
+        return "sqlmap: illegal operation";
+    }
+
+    public static String reverseCommand() {
         // TODO
-        return "pwn";
+        return "objdump";
     }
 }
