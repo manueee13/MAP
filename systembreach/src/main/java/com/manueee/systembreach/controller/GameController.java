@@ -62,7 +62,7 @@ public class GameController implements Timer.TimerListener {
     @Override
     public void onTimeOut() {
         gameState.setGameOver(true);
-        //gameView.showGameOverDialog();
+        gameView.showGameOverDialog();
     }
 
     public int getTime() {

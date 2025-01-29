@@ -339,6 +339,10 @@ public class GameView extends JFrame {
         infoPanel.repaint();
     }
 
+    public void showGameOverDialog() {
+        JOptionPane.showMessageDialog(this, "Hai perso! La centrale è esplosa.", "Game Over", JOptionPane.ERROR_MESSAGE);
+    }
+
     public void addStartTimerListener(ActionListener listener) {
         // Implementa la logica per aggiungere un listener al timer
     }

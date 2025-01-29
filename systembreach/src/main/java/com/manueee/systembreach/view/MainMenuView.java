@@ -137,8 +137,19 @@ public class MainMenuView extends JFrame{
     }
 
     private void startNewGame() {
-        JOptionPane.showMessageDialog(this, "build alpha 0.1\nQuesto è una demo.\nMolte funzionalità non sono ancora state implementate\ne veranno introdotte con una prossima build.");
-        dispose();
+        JOptionPane.showMessageDialog(this, 
+        "System Breach - Alpha 0.1\n\n"
+        + "Sei un hacker e il tuo amico 'm4t3' ti ha consegnato diversi hard disk di dubbia provenienza.\n"
+        + "Collegandone uno al tuo computer, scopri che contiene un malware letale:\n"
+        + "sta compromettendo il sistema di raffreddamento della centrale nucleare della tua città.\n\n"
+        + "Se non lo fermi in tempo, il reattore andrà in meltdown.\n"
+        + "Usa i tools presenti nel tuo terminale per individuare e neutralizzare il malware.\n"
+        + "'m4t3' sarà al tuo fianco per guidarti.\n\n"
+        + "Hai 30 minuti di tempo.\n\n"
+        + "Buona fortuna!", 
+        "System Breach", 
+        JOptionPane.INFORMATION_MESSAGE);
+            dispose();
         // Inizializza il gioco
         new GameController(true, null);
     }
