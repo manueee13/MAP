@@ -33,27 +33,6 @@ L'hacker deve fermare l'attacco, risolvendo enigmi e superando ostacoli tecnici.
 
 **System Breach** è stato progettato seguendo l'architettura MVC (Model-View-Controller) per garantire modularità e scalabilità.
 
-### Diagramma delle Classi
-Il diagramma rappresenta una parte significativa del codice, evidenziando le principali entità coinvolte:
-- **Model**: Gestione dei dati, inclusi file e informazioni sull'hard disk.
-- **View**: Interfaccia grafica realizzata con Swing.
-- **Controller**: Logica di gioco e coordinamento tra Model e View.
-
-![Diagramma delle Classi](./docs/class_diagram.png)
-
-### Specifica Algebrica
-
-WIP
-
-### Tecnologie Utilizzate
-
-- **File**: Salvataggio della partita in corso
-- **JDBC**: Utilizzo del database H2 come parte di una sfida di SQL Injection
-- **Socket**: ?
-- **Lambda Expressions**: Snellimento del codice e gestione delle funzioni.
-- **Thread**: Implementazione del timer e di operazioni asincrone.
-- **Swing**: Creazione dell'interfaccia grafica.
-
 ---
 
 ## Requisiti
@@ -83,14 +62,14 @@ WIP
 
 ## Documentazione
 
-- La documentazione Javadoc è inclusa nella cartella `docs`.
-- Per ulteriori dettagli, consultare il file `DOCUMENTATION.md` nella repository.
+- La documentazione è accessibile [qui](./docs/DOCUMENTATION.md)
+- Per ulteriori dettagli, è possibile accedere alla javadoc [qui](./docs/javadoc/index.html)
 
 ---
 
 ## Crediti
 
-Progetto realizzato da:
+Progetto realizzato da: Emanuele 'manueee_13' Tamborrino
 
 
 ---
