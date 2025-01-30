@@ -36,8 +36,8 @@ Il progetto segue il pattern architetturale MVC (Model-View-Controller):
 
 ### Util
 #### commands
-- `Command`: Interfaccia per i comandi utente e il loro parsing e esecuzione.
-- `EnumCommand`: Enum per i comandi utente.
+- `Command`: Gestione dei singoli comandi utente, il loro parsing e l'esecuzione.
+- `EnumCommand`: Enumerazione dei comandi utente.
 
 #### fonts
 - `FontUtils`: Utilità per caricare font custom.
