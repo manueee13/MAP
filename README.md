@@ -64,8 +64,8 @@ L'hacker deve fermare l'attacco, risolvendo enigmi e superando ostacoli tecnici.
 
 ## Documentazione
 
-- La documentazione è accessibile [qui](./docs/DOCUMENTATION.md)
-- Per ulteriori dettagli, è possibile accedere alla javadoc [qui](./docs/javadoc/index.html)
+- La documentazione è accessibile [qui](./systembreach/docs/DOCUMENTATION.md)
+- Per ulteriori dettagli, è possibile accedere alla javadoc [qui](./systembreach/docs/javadoc/index.html)
 
 ---
 
