@@ -1,0 +1,26 @@
+-classpath
+'C:/Users/etamb/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar;C:/Users/etamb/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'C:/Users/etamb/MAP/systembreach/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/etamb/MAP/systembreach/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'systembreach 0.2-alpha API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' 'C:/Users/etamb/MAP/systembreach/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'systembreach 0.2-alpha API'

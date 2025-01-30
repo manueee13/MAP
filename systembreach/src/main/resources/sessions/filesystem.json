@@ -1,0 +1,73 @@
+{
+    "root": {
+        "type": "directory",
+        "name": "/",
+        "children": {
+            "home": {
+                "type": "directory",
+                "children": {
+                    "HACK101.txt": {
+                        "type": "file",
+                        "content": ""
+                    },
+                    "dictionary.txt": {
+                        "type": "file",
+                        "content": "> E' pieno di combinazioni di password, dalle più comuni a quelle più complesse\n"
+                    }
+                }
+            },
+            "bin": {
+                "type": "directory",
+                "children": {
+                    "ls": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    },
+                    "cat": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    },
+                    "cd": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    },
+                    "man": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    },
+                    "list": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    },
+                    "clear": {
+                        "type": "file",
+                        "content": "> Non riesco a leggere, sembra un file binario"
+                    }
+                }
+            },
+            "mnt": {
+                "type": "directory",
+                "children": {
+                    "sda1": {
+                        "type": "directory",
+                        "children": {
+                            "confidentiality.txt": {
+                                "type": "file",
+                                "content": "Attenzione!\n\nUna volta collegato il dispotivo ad un terminale connesso alla rete, il software provederà automaticamente ad avviare la procedura di attacco preso il bersaglio vicino.\n\nPer informazioni consultare la documentazione presente in docs.\n"
+                            },
+                            "project_SB013": {
+                                "type": "file",
+                                "content": "> Credo si tratti del malware, non riesco a fermarlo...\n"
+                            },
+                            "docs.zip": {
+                                "type": "archive",
+                                "content": "> E' un archivio, ma sembra protetto con una password\n"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+  
