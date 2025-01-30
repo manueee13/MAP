@@ -3,8 +3,8 @@ package com.manueee.systembreach.model;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <h2>GameTimer</h2>
- * Classe <b>model</b> per la gestione del timer di gioco.
+ * Classe model che gestisce il timer di gioco.
+ * Implementa Runnable per eseguire il countdown in un thread separato.
  */
 public class Timer implements Runnable {
     /**
@@ -20,6 +20,12 @@ public class Timer implements Runnable {
     private Thread timerThread;
     private int currentTime;
 
+    /**
+     * Costruisce un nuovo timer
+     * @param seconds Il numero di secondi iniziali
+     * @param listener L'oggetto che riceverà le notifiche del timer
+     * @throws IllegalArgumentException se seconds <= 0 o listener è null
+     */
     public Timer(int seconds, TimerListener listener) {
         if (seconds <= 0) {
             throw new IllegalArgumentException("Timer must be greater than 0");
@@ -32,12 +38,18 @@ public class Timer implements Runnable {
         this.isRunning = false;
     }
 
+    /**
+     * Avvia il timer in un nuovo thread
+     */
     public void start() {
         isRunning = true;
         timerThread = new Thread(this);
         timerThread.start();
     }
 
+    /**
+     * Interrompe l'esecuzione del timer
+     */
     public synchronized void stopTimer() {
         isRunning = false;
         if (timerThread != null) {

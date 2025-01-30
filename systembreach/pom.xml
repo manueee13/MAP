@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.manueee.systembreach</groupId>
   <artifactId>systembreach</artifactId>
-  <version>0.1-alpha</version>
+  <version>0.2-alpha</version>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>

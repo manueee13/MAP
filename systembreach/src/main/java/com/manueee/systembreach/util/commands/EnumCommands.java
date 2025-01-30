@@ -3,8 +3,8 @@ package com.manueee.systembreach.util.commands;
 import java.util.stream.Stream;
 
 /**
- * <h2>EnumCommands</h2>
- * Definizione dei comandi del gioco.
+ * Enumerazione dei comandi disponibili nel gioco.
+ * Parte del layer Controller nel pattern MVC, gestisce le definizioni dei comandi.
  */
 public enum EnumCommands {
     INVALID(
@@ -63,6 +63,8 @@ public enum EnumCommands {
         "USAGE: objdump\n\t[-d] <file> - Disassemble <file>\n\t[-s] <file> - Display sections of <file>\n\t[-t] <file> - Display symbol table of <file>\n\n"
     );
 
+    private static final String NEWLINE = "\n";
+    
     private final String command;
     private final String description;
 
@@ -71,22 +73,37 @@ public enum EnumCommands {
         this.description = description;
     }
 
+    /**
+     * @return L'identificatore del comando
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * @return La descrizione e l'uso del comando
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Ottiene le informazioni formattate del comando
+     * @return Descrizione del comando con newline
+     */
     public String getCommandInfo() {
-        return new StringBuilder(description).append("\n").toString();
+        return description + NEWLINE;
     }
 
+    /**
+     * Converte una stringa in un comando enum
+     * @param command Stringa del comando da convertire
+     * @return Comando corrispondente o INVALID se non trovato
+     */
     public static EnumCommands fromString(final String command) {
         return Stream.of(EnumCommands.values())
             .filter(c -> c.getCommand().equals(command))
             .findFirst()
             .orElse(EnumCommands.INVALID);
     }
- }
+}

@@ -12,27 +12,33 @@ import java.io.File;
  * <h2>MainMenuView</h2>
  * Classe <b>View</b> per il menu principale.
  */
-public class MainMenuView extends JFrame{
+public class MainMenuView extends JFrame {
+    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_HEIGHT = 600;
+    private static final Dimension BUTTON_SIZE = new Dimension(200, 50);
+    
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private JSlider musicSlider;
     private JSlider soundSlider;
 
-
     /**
      * Gestione della finestra MainMenu
      */
-    public MainMenuView() 
-    {
-        /*
-        * Impostazioni finestra principale
-        */
+    public MainMenuView() {
+        initializeFrame();
+        initializeComponents();
+    }
+
+    private void initializeFrame() {
         setTitle("System Breach - Menu principale");
-        setSize(800, 600);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+    }
 
+    private void initializeComponents() {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
@@ -52,23 +58,22 @@ public class MainMenuView extends JFrame{
         */
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        Dimension buttonSize = new Dimension(200, 50);
 
         JButton newGameButton = new JButton("Nuova partita");
         JButton loadGameButton = new JButton("Carica partita");
         JButton optionsButton = new JButton("Opzioni");
 
-        newGameButton.setPreferredSize(buttonSize);
-        newGameButton.setMinimumSize(buttonSize);
-        newGameButton.setMaximumSize(buttonSize);
+        newGameButton.setPreferredSize(BUTTON_SIZE);
+        newGameButton.setMinimumSize(BUTTON_SIZE);
+        newGameButton.setMaximumSize(BUTTON_SIZE);
 
-        loadGameButton.setPreferredSize(buttonSize);
-        loadGameButton.setMinimumSize(buttonSize);
-        loadGameButton.setMaximumSize(buttonSize);
+        loadGameButton.setPreferredSize(BUTTON_SIZE);
+        loadGameButton.setMinimumSize(BUTTON_SIZE);
+        loadGameButton.setMaximumSize(BUTTON_SIZE);
 
-        optionsButton.setPreferredSize(buttonSize);
-        optionsButton.setMinimumSize(buttonSize);
-        optionsButton.setMaximumSize(buttonSize);
+        optionsButton.setPreferredSize(BUTTON_SIZE);
+        optionsButton.setMinimumSize(BUTTON_SIZE);
+        optionsButton.setMaximumSize(BUTTON_SIZE);
         
         newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -138,7 +143,7 @@ public class MainMenuView extends JFrame{
 
     private void startNewGame() {
         JOptionPane.showMessageDialog(this, 
-        "System Breach - Alpha 0.1\n\n"
+        "System Breach - Alpha 0.2\n\n"
         + "Sei un hacker e il tuo amico 'm4t3' ti ha consegnato diversi hard disk di dubbia provenienza.\n"
         + "Collegandone uno al tuo computer, scopri che contiene un malware letale:\n"
         + "sta compromettendo il sistema di raffreddamento della centrale nucleare della tua città.\n\n"

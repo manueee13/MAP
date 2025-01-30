@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 /**
  * <h1>System Breach</h1>
  * Entry point dell'applicazione.
- * @version alpha 0.1
+ * @version alpha 0.2
  * @author Emanuele "manueee_13" Tamborrino
  */
 public final class App {

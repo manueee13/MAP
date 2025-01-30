@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <h1>FileSystem</h1>
- * Classe <b>model</b> per la gestione del file system di gioco.
+ * Classe che implementa un file system virtuale per il gioco.
+ * Gestisce la struttura delle directory e dei file, permettendo la navigazione
+ * e la manipolazione del contenuto.
  */
 public class FileSystem {
     private Directory root;
@@ -18,12 +19,14 @@ public class FileSystem {
     }
 
     /**
-     * Mostra il contenuto della directory corrente o di una directory specificata quando viene passato il comando ls.
-     * @param path il percorso della directory
-     * @return il contenuto della directory
+     * Mostra il contenuto di una directory.
+     * @param path Il percorso della directory da visualizzare
+     * @return Una stringa contenente l'elenco dei file e directory separati da spazi,
+     *         o un messaggio di errore se il percorso non esiste
      */
     public String ls(String path) {
         if (path == null || path.trim().isEmpty()) {
+            return ls(".");
         }
 
         FSNode node = findNode(path);
@@ -33,18 +36,24 @@ public class FileSystem {
 
         if (node instanceof Directory) {
             Directory dir = (Directory) node;
-            return String.join(" ", dir.children.keySet());
+            return String.join(" ", dir.getChildren().keySet());
         } else {
             return node.getName();
         }
     }
 
     /**
-     * Cambia percorso della directory corrente.
-     * @param path
-     * @return <b>true</b> se la directory esiste, <b>false</b> altrimenti
+     * Cambia la directory corrente.
+     * @param path Il percorso della directory di destinazione
+     * @return "OK" se il cambio è avvenuto con successo,
+     *         "NOEXIST" se il percorso non esiste,
+     *         "NOTDIR" se il percorso non è una directory
      */
     public String cd(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return "NOEXIST";
+        }
+
         FSNode node = findNode(path);
         if (node == null) {
             return "NOEXIST";
@@ -56,7 +65,18 @@ public class FileSystem {
         return "OK";
     }
 
+    /**
+     * Visualizza il contenuto di un file.
+     * @param path Il percorso del file da leggere
+     * @return Il contenuto del file se esiste,
+     *         "NOEXIST" se il file non esiste,
+     *         "NOTFILE" se il percorso indica una directory
+     */
     public String cat(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return "NOEXIST";
+        }
+
         FSNode node = findNode(path);
         if (node == null) {
             return "NOEXIST";
@@ -68,9 +88,9 @@ public class FileSystem {
     }
 
     /**
-     * Controlla se un file è valido
-     * @param path il percorso del file
-     * @return <b>true</b> se il file esiste e, se specificato, è del tipo richiesto, <b>false</b> altrimenti
+     * Verifica se un percorso corrisponde a un file valido.
+     * @param path Il percorso da verificare
+     * @return true se il percorso corrisponde a un file, false altrimenti
      */
     public boolean isValidFile(String path) {
         FSNode node = findNode(path);
@@ -78,8 +98,8 @@ public class FileSystem {
     }
 
     /**
-     * Carica la struttura del file system da un file JSON.
-     * @param jsonFS il JSON che rappresenta il file system
+     * Carica un file system da una rappresentazione JSON.
+     * @param jsonFS L'oggetto JSON contenente la struttura del file system
      */
     public void loadFromJson(JsonObject jsonFS) {
         if (jsonFS == null || !jsonFS.has("root")) {
@@ -91,6 +111,10 @@ public class FileSystem {
         currentDirectory = root;
     }
 
+    /**
+     * Converte il file system in una rappresentazione JSON.
+     * @return Un oggetto JsonObject che rappresenta il file system
+     */
     public JsonObject toJson() {
         JsonObject root = new JsonObject();
         root.add("root", directoryToJson(this.root));
@@ -103,7 +127,7 @@ public class FileSystem {
         dirJson.addProperty("name", dir.getName());
 
         JsonObject children = new JsonObject();
-        for (Map.Entry<String, FSNode> entry : dir.children.entrySet()) {
+        for (Map.Entry<String, FSNode> entry : dir.getChildren().entrySet()) {
             FSNode child = entry.getValue();
             if (child instanceof Directory) {
                 children.add(entry.getKey(), directoryToJson((Directory) child));
@@ -121,18 +145,25 @@ public class FileSystem {
     }
 
     /**
-     * <code>createFile</code>
-     * Crea un file in una directory specifica.
-     * @param path Assegna il percorso del file
-     * @param content Restituisce il contenuto del file
+     * Crea un nuovo file nel file system.
+     * @param path Il percorso completo del file da creare
+     * @param content Il contenuto da inserire nel file
+     * @throws IllegalArgumentException se la directory padre non esiste
      */
     public void createFile(String path, String content) {
+        if (path == null || path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Path cannot be null or empty");
+        }
+        if (content == null) {
+            content = "";
+        }
+
         String fileName = path.substring(path.lastIndexOf("/") + 1);
         String parentPath = path.substring(0, path.lastIndexOf("/"));
 
         Directory parentDir = findDirectory(parentPath);
         if (parentDir != null) {
-            parentDir.children.put(fileName, new File(fileName, parentDir, content));
+            parentDir.addChild(fileName, new File(fileName, parentDir, content));
         } else {
             throw new IllegalArgumentException("createFile: cannot create file '"
                     + path
@@ -140,13 +171,22 @@ public class FileSystem {
         }
     }
 
+    /**
+     * Crea una nuova directory nel file system.
+     * @param path Il percorso completo della directory da creare
+     * @throws IllegalArgumentException se la directory padre non esiste
+     */
     public void createDirectory(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Path cannot be null or empty");
+        }
+
         String dirName = path.substring(path.lastIndexOf("/") + 1);
         String parentPath = path.substring(0, path.lastIndexOf("/"));
 
         Directory parentDir = findDirectory(parentPath);
         if (parentDir != null) {
-            parentDir.children.put(dirName, new Directory(dirName, parentDir));
+            parentDir.addChild(dirName, new Directory(dirName, parentDir));
         } else {
             throw new IllegalArgumentException("createDirectory: cannot create directory '"
                     + path
@@ -154,6 +194,10 @@ public class FileSystem {
         }
     }
 
+    /**
+     * Ottiene il percorso della directory corrente.
+     * @return Il percorso assoluto della directory corrente
+     */
     public String getCurrentPath() {
         StringBuilder path = new StringBuilder();
         Directory current = currentDirectory;
@@ -167,12 +211,17 @@ public class FileSystem {
                 path.insert(0, current.getName());
                 path.insert(0, "/");
             }
-            current = current.parent;
+            current = current.getParent();
         }
 
         return path.toString();
     }
     
+    /**
+     * Ottiene il nome di un nodo del file system.
+     * @param path Il percorso del nodo
+     * @return Il nome del nodo se esiste, null altrimenti
+     */
     public String getNode(String path) {
         return findNode(path).getName();
     }
@@ -190,7 +239,7 @@ public class FileSystem {
 
         // Se path è ".." vai al parent se esiste
         if ("..".equals(path)) {
-            return currentDirectory.parent != null ? currentDirectory.parent : currentDirectory;
+            return currentDirectory.getParent() != null ? currentDirectory.getParent() : currentDirectory;
         }
     
         // Determina il punto di partenza
@@ -203,8 +252,8 @@ public class FileSystem {
                 continue;
             }
             if (part.equals("..")) {
-                if (current.parent != null) {
-                    current = current.parent;
+                if (current.getParent() != null) {
+                    current = current.getParent();
                 }
                 continue;
             }
@@ -212,7 +261,7 @@ public class FileSystem {
                 return null;
             }
             Directory dir = (Directory) current;
-            FSNode next = dir.children.get(part);
+            FSNode next = dir.getChild(part);
             if (next == null) {
                 return null;
             }
@@ -247,11 +296,11 @@ public class FileSystem {
                 switch(type) {
                     case "directory":
                         Directory childDir = parseDirectory(childJson, dir);
-                        dir.children.put(childName, childDir);
+                        dir.addChild(childName, childDir);
                         break;
                     default:
                         String content = childJson.has("content") ? childJson.get("content").getAsString() : "";
-                        dir.children.put(childName, new File(childName, dir, content));
+                        dir.addChild(childName, new File(childName, dir, content));
                         break;
                 }
             }
@@ -259,13 +308,18 @@ public class FileSystem {
         return dir;
     }
 
-    // ========CLASSI NIDIFICATE========
-
+    /**
+     * Classe astratta che rappresenta un nodo nel file system.
+     * Può essere specializzata in File o Directory.
+     */
     private abstract class FSNode {
-        protected String name;
-        protected Directory parent;
+        private final String name;
+        private Directory parent;
 
         public FSNode(String name, Directory parent) {
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Name cannot be null or empty");
+            }
             this.name = name;
             this.parent = parent;
         }
@@ -273,14 +327,22 @@ public class FileSystem {
         public String getName() {
             return name;
         }
+
+        protected Directory getParent() {
+            return parent;
+        }
     }
 
+    /**
+     * Classe che rappresenta un file nel file system.
+     * Contiene un nome, un riferimento alla directory padre e il contenuto.
+     */
     private class File extends FSNode {
         private String content;
 
         public File(String name, Directory parent, String content) {
             super(name, parent);
-            this.content = content;
+            this.content = content != null ? content : "";
         }
 
         public String getContent() {
@@ -288,11 +350,34 @@ public class FileSystem {
         }
     }
 
+    /**
+     * Classe che rappresenta una directory nel file system.
+     * Contiene un nome, un riferimento alla directory padre e una mappa dei figli.
+     */
     private class Directory extends FSNode {
-        private Map<String, FSNode> children = new HashMap<>();
+        private final Map<String, FSNode> children;
 
         public Directory(String name, Directory parent) {
             super(name, parent);
+            this.children = new HashMap<>();
+        }
+
+        public void addChild(String name, FSNode node) {
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Child name cannot be null or empty");
+            }
+            if (node == null) {
+                throw new IllegalArgumentException("Child node cannot be null");
+            }
+            children.put(name, node);
+        }
+
+        public FSNode getChild(String name) {
+            return children.get(name);
+        }
+
+        public Map<String, FSNode> getChildren() {
+            return new HashMap<>(children); // Returns a defensive copy
         }
     }
 }

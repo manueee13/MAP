@@ -10,41 +10,49 @@ import com.manueee.systembreach.util.sessions.SessionUtils;
 
 import java.io.File;
 /**
- * <h1>Classe GameController</h1>
- * Classe <b>controller</b> per l'interazione tra {@link #gameView} e <b>model</b>.
+ * Controller principale del gioco che gestisce l'interazione tra view e model.
+ * Gestisce il timer di gioco, le mail e il salvataggio della sessione.
+ * Implementa TimerListener per gestire gli eventi del timer.
  */
 public class GameController implements Timer.TimerListener {
-    private static final int TIMER_DURATION = 1800;  // 1800 = 30 minuti
+    private static final int TIMER_DURATION = 1800;  // 30 minuti
     private static final int SECONDS_IN_A_MINUTE = 60;
 
-    private GameState gameState;
-    private GameView gameView;
+    private final GameState gameState;
+    private final GameView gameView;
     private Timer gameTimer;
-    private CommandController commandController;
+    private final CommandController commandController;
     
     /**
-     * <code>GameController</code>
-     * Costruttore per la classe GameController.
-     * @param isNewGame booleano se carica un nuova sessione o una salvata
+     * Inizializza un nuovo controller di gioco
+     * @param isNewGame true per una nuova partita, false per caricare una sessione salvata
+     * @param loadFile file di salvataggio da caricare (può essere null se isNewGame è true)
      */
     public GameController(boolean isNewGame, File loadFile) {
         if (isNewGame) {
             this.gameState = new GameState(1, this);
-            this.commandController = new CommandController(new Terminal(), gameState);
-            this.gameView = new GameView(commandController, this);
             this.gameTimer = new Timer(TIMER_DURATION, this);
-            initializeGame();
-            gameView.setVisible(true);
-            notifyNewMail(gameState.getMail(1), 1);
         } else {
             this.gameState = SessionUtils.loadSession(loadFile, this);
-            this.commandController = new CommandController(new Terminal(), gameState);
-            this.gameView = new GameView(commandController, this);
-            initializeGame();
-            gameView.setVisible(true);
-            viewMail(gameState.getCurrentQuestId());
-            
+            this.gameTimer = new Timer(gameState.getRemainingTime(), this); // Inizializza con il tempo salvato
         }
+        
+        this.commandController = new CommandController(new Terminal(), gameState);
+        this.gameView = new GameView(commandController, this);
+        
+        initializeGame();
+        
+        if (isNewGame) {
+            notifyNewMail(gameState.getMail(1), 1);
+        } else {
+            // Ricrea la lista delle mail precedenti
+            for (int i = 1; i <= gameState.getCurrentQuestId(); i++) {
+                Mail mail = gameState.getMail(i);
+                notifyNewMail(mail, i);
+            }
+        }
+        
+        gameView.setVisible(true);
     }
 
     private void initializeGame() {
@@ -70,7 +78,11 @@ public class GameController implements Timer.TimerListener {
     }
 
     public void setTime(int time) {
-        this.gameTimer = new Timer(TIMER_DURATION, this);
+        if (gameTimer != null) {
+            gameTimer.stopTimer();
+        }
+        gameTimer = new Timer(time, this);
+        gameTimer.start();
     }
 
     public void notifyNewMail(Mail mail, int questId) {

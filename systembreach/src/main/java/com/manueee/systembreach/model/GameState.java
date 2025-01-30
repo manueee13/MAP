@@ -9,19 +9,29 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
 /**
- * <h2>GameState</h2>
- * Classe <b>model</b> per la gestione dello stato del gioco.
+ * Classe model principale che gestisce lo stato del gioco.
+ * Mantiene il file system virtuale, i comandi disponibili e lo stato della missione corrente.
  */
 public class GameState {
-    private final FileSystem fileSystem;
-    private boolean isGameOver;
-    private List<GameStateObserver> observers;
+    private FileSystem fileSystem;
     private final Set<EnumCommands> availableCommands;
+    private final List<GameStateObserver> observers;
+    private boolean isGameOver;
     private int currentQuestId;
     private final GameController gameController;
 
+    /**
+     * Costruisce un nuovo stato di gioco
+     * @param currentQuestId ID della missione iniziale
+     * @param gameController Controller di gioco associato
+     * @throws IllegalArgumentException se gameController è null
+     */
     public GameState(int currentQuestId, GameController gameController) {
+        if (gameController == null) {
+            throw new IllegalArgumentException("GameController cannot be null");
+        }
         this.isGameOver = false;
         this.observers = new ArrayList<>();
         this.fileSystem = SessionUtils.createNewSession();
@@ -33,6 +43,10 @@ public class GameState {
 
     public FileSystem getFileSystem() {
         return fileSystem;
+    }
+
+    public void setFileSystem(FileSystem fs) {
+        this.fileSystem = fs;
     }
 
     private void initializeCommands() {

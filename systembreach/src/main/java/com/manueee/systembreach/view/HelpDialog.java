@@ -5,20 +5,32 @@ import java.awt.*;
 
 /**
  * <h2>HelpDialog</h2>
- * Classe <b>view</b> per la finestra di aiuto.
+ * Dialog che mostra l'help del gioco.
+ * Visualizza una lista di comandi disponibili e le relative descrizioni.
  */
 public class HelpDialog extends JDialog {
+    private static final int DIALOG_WIDTH = 660;
+    private static final int DIALOG_HEIGHT = 610;
+    private static final int FONT_SIZE = 20;
+    
     public HelpDialog(Frame parent) {
         super(parent, "Aiuto", true);
-        setSize(660, 610);
-        setLocationRelativeTo(parent);
-        getContentPane().setBackground(Color.BLACK);
+        initializeDialog();
+        setupHelpContent();
+    }
 
+    private void initializeDialog() {
+        setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
+        setLocationRelativeTo(getParent());
+        getContentPane().setBackground(Color.BLACK);
+    }
+
+    private void setupHelpContent() {
         JTextArea helpText = new JTextArea();
         helpText.setEditable(false);
         helpText.setBackground(Color.BLACK);
         helpText.setForeground(Color.GREEN);
-        helpText.setFont(new Font("Monospaced", Font.PLAIN, 20));
+        helpText.setFont(new Font("Monospaced", Font.PLAIN, FONT_SIZE));
         
         StringBuilder text = new StringBuilder();
         text.append("╔════════════════════════════╗\n");

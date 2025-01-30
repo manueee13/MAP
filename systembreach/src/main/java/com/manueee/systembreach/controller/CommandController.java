@@ -6,28 +6,39 @@ import com.manueee.systembreach.util.commands.Commands;
 import com.manueee.systembreach.util.commands.EnumCommands;
 
 /**
- * <h2>CommandController</h2>
- * Classe <b>controller</b> per l'interazione dei comandi in input dell'utente.
+ * Controller che gestisce l'elaborazione dei comandi inseriti dall'utente.
+ * Si occupa di validare i comandi, verificarne la disponibilità e delegarne l'esecuzione.
  */
 public class CommandController {
     private final Terminal terminal;
     private final GameState gameState;
 
+    /**
+     * Crea un nuovo controller dei comandi
+     * @param terminal il terminale su cui operare
+     * @param gameState lo stato del gioco corrente
+     * @throws IllegalArgumentException se terminal o gameState sono null
+     */
     public CommandController(Terminal terminal, GameState gameState) {
+        if (terminal == null || gameState == null) {
+            throw new IllegalArgumentException("Terminal and GameState cannot be null");
+        }
         this.terminal = terminal;
         this.gameState = gameState;
     }
 
     /**
-     * <code>processCommand</code>
-     * Processa i comandi forniti in input dall'utente, verificando che il
-     * comando sia disponibile nella sessione e che sia corretto.
-     * @param input della stringa di comando fornita dall'utente
-     * @return <code>invalidCommand()</code> se il comando non è valido o non disponibile
+     * Elabora un comando inserito dall'utente
+     * @param input il comando da elaborare
+     * @return il risultato dell'elaborazione del comando
      */
     public String processCommand(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return Commands.invalidCommand();
+        }
+
         String[] parts = input.split(" ", 2);
-        String command = parts[0];
+        String command = parts[0].toLowerCase();
         String args = parts.length > 1 ? parts[1] : "";
 
         EnumCommands cmd = EnumCommands.fromString(command);
@@ -35,6 +46,18 @@ public class CommandController {
             return Commands.invalidCommand();
         }
 
+        String result = executeCommand(cmd, args);
+        updateTerminal(command, result);
+        return result;
+    }
+
+    /**
+     * Esegue il comando specificato
+     * @param cmd il comando da eseguire
+     * @param args gli argomenti del comando
+     * @return il risultato dell'esecuzione
+     */
+    private String executeCommand(EnumCommands cmd, String args) {
         String result;
         switch (cmd) {
             case LIST:
@@ -67,9 +90,20 @@ public class CommandController {
                 break;
             default:
                 result = Commands.invalidCommand();
+                break;
         }
-        terminal.addCommand(command);
-        terminal.addOutput(result);
         return result;
+    }
+
+    /**
+     * Aggiorna lo stato del terminale
+     * @param command il comando eseguito
+     * @param result il risultato dell'esecuzione
+     */
+    private void updateTerminal(String command, String result) {
+        terminal.addCommand(command);
+        if (!result.isEmpty()) {
+            terminal.addOutput(result);
+        }
     }
 }

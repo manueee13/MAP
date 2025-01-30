@@ -12,11 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+
 /**
- * <h2>GameView</h2>
- * Classe <b>view</b> della finestra di gioco.
+ * View principale del gioco.
+ * Gestisce l'interfaccia grafica della finestra di gioco, inclusi il terminale,
+ * il pannello informazioni e il timer.
  */
 public class GameView extends JFrame {
+    private static final int WINDOW_WIDTH = 1280;
+    private static final int WINDOW_HEIGHT = 960;
+    private static final Color TERMINAL_COLOR = Color.GREEN;
+    private static final Color BACKGROUND_COLOR = Color.BLACK;
+    private static final Color BORDER_COLOR = new Color(80, 80, 80);
+
     private JPanel gamePanel;
     private JTextArea terminalPanel;
     private JLabel timerLabel;
@@ -31,13 +39,13 @@ public class GameView extends JFrame {
 
     public GameView(CommandController commandController, GameController gameController) {
         setTitle("System Breach");
-        setSize(1280, 960);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setBackground(BACKGROUND_COLOR);
 
         customFont = FontUtils.loadFont();
         menuBar();
@@ -58,7 +66,7 @@ public class GameView extends JFrame {
 
     private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.BLACK);
+        menuBar.setBackground(BACKGROUND_COLOR);
         menuBar.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80), 1));
 
         JMenu fileMenu = new JMenu("File");
@@ -105,14 +113,14 @@ public class GameView extends JFrame {
     }
 
     private void styleMenu(JMenu menu) {
-        menu.setForeground(Color.GREEN);
-        menu.setBackground(Color.BLACK);
+        menu.setForeground(TERMINAL_COLOR);
+        menu.setBackground(BACKGROUND_COLOR);
         menu.setFont(customFont);
     }
 
     private void styleMenuItem(JMenuItem menuItem) {
-        menuItem.setForeground(Color.GREEN);
-        menuItem.setBackground(Color.BLACK);
+        menuItem.setForeground(TERMINAL_COLOR);
+        menuItem.setBackground(BACKGROUND_COLOR);
         menuItem.setFont(customFont);
     }
     /**
@@ -121,33 +129,33 @@ public class GameView extends JFrame {
      */
     private JPanel gamePanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBackground(Color.BLACK);
+        panel.setBackground(BACKGROUND_COLOR);
 
-        Color borderColor = new Color(80, 80, 80);
+        Color borderColor = BORDER_COLOR;
 
         // Pannello sinistro (Terminal)
         terminalPanel();
         JScrollPane terminalScrollPane = new JScrollPane(terminalPanel);
         terminalScrollPane.setBorder(BorderFactory.createLineBorder(borderColor, 3));
-        terminalScrollPane.getViewport().setBackground(Color.BLACK);
+        terminalScrollPane.getViewport().setBackground(BACKGROUND_COLOR);
         panel.add(terminalScrollPane, BorderLayout.CENTER);
 
         // Pannello destro (info + timer)
         JPanel rightPanel = new JPanel(new BorderLayout(0, 5));
-        rightPanel.setBackground(Color.BLACK);
+        rightPanel.setBackground(BACKGROUND_COLOR);
         rightPanel.setBorder(BorderFactory.createLineBorder(borderColor, 3));
 
         // Info panel in alto
         infoPanel();
         JScrollPane infoScrollPane = new JScrollPane(infoPanel);
         infoScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        infoScrollPane.getViewport().setBackground(Color.BLACK);
+        infoScrollPane.getViewport().setBackground(BACKGROUND_COLOR);
         rightPanel.add(infoScrollPane, BorderLayout.CENTER);
 
         // Timer in basso
         timerLabel();
         JPanel timerPanel = new JPanel(new BorderLayout());
-        timerPanel.setBackground(Color.BLACK);
+        timerPanel.setBackground(BACKGROUND_COLOR);
         timerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 2));
         timerPanel.add(timerLabel, BorderLayout.CENTER);
         rightPanel.add(timerPanel, BorderLayout.SOUTH);
@@ -161,9 +169,9 @@ public class GameView extends JFrame {
     private void terminalPanel() {
         terminalPanel = new JTextArea();
         terminalPanel.setFont(customFont);
-        terminalPanel.setBackground(Color.BLACK);
-        terminalPanel.setForeground(Color.GREEN);
-        terminalPanel.setCaretColor(Color.GREEN);
+        terminalPanel.setBackground(BACKGROUND_COLOR);
+        terminalPanel.setForeground(TERMINAL_COLOR);
+        terminalPanel.setCaretColor(TERMINAL_COLOR);
         terminalPanel.setMargin(new Insets(10, 10, 10, 10));
         terminalPanel.setLineWrap(true);
         terminalPanel.setWrapStyleWord(true);
@@ -228,22 +236,22 @@ public class GameView extends JFrame {
     private void infoPanel() {
         infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBackground(Color.BLACK);
+        infoPanel.setBackground(BACKGROUND_COLOR);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 
         // Scroll pane principale
         JScrollPane scrollPane = new JScrollPane(infoPanel);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 2));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getViewport().setBackground(Color.BLACK);
+        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
         scrollPane.setPreferredSize(new Dimension(300, getHeight()));
     }
 
     private void timerLabel() {
         timerLabel = new JLabel("30:00");
         timerLabel.setFont(customFont);
-        timerLabel.setForeground(Color.GREEN);
-        timerLabel.setBackground(Color.BLACK);
+        timerLabel.setForeground(TERMINAL_COLOR);
+        timerLabel.setBackground(BACKGROUND_COLOR);
         timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         timerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         timerLabel.setOpaque(true);
@@ -252,12 +260,12 @@ public class GameView extends JFrame {
     private JPanel optionsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Color.BLACK);
+        panel.setBackground(BACKGROUND_COLOR);
 
         JLabel musicLabel = new JLabel("Musica");
         JLabel soundLabel = new JLabel("Sonori");
-        musicLabel.setForeground(Color.GREEN);
-        soundLabel.setForeground(Color.GREEN);
+        musicLabel.setForeground(TERMINAL_COLOR);
+        soundLabel.setForeground(TERMINAL_COLOR);
 
         Dimension sliderSize = new Dimension(300, 50);
 
@@ -269,8 +277,8 @@ public class GameView extends JFrame {
 
         JButton backButton = new JButton("Indietro");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.setForeground(Color.GREEN);
-        backButton.setBackground(Color.BLACK);
+        backButton.setForeground(TERMINAL_COLOR);
+        backButton.setBackground(BACKGROUND_COLOR);
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "Game"));
 
         musicLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -295,48 +303,65 @@ public class GameView extends JFrame {
         slider.setPaintLabels(true);
         slider.setMaximumSize(size);
         slider.setAlignmentX(Component.CENTER_ALIGNMENT);
-        slider.setForeground(Color.GREEN);
-        slider.setBackground(Color.BLACK);
+        slider.setForeground(TERMINAL_COLOR);
+        slider.setBackground(BACKGROUND_COLOR);
     }
 
     public void updateTimer(String time) {
         SwingUtilities.invokeLater(() -> timerLabel.setText(time));
     }
 
+    /**
+     * Aggiunge una nuova mail al pannello informazioni
+     * @param mailId ID univoco della mail
+     * @param sender Mittente della mail
+     * @param object Oggetto della mail
+     */
     public void addMailEntry(int mailId, String sender, String object) {
+        SwingUtilities.invokeLater(() -> {
+            JPanel mailPanel = createMailPanel(sender, object);
+            mailPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    gameController.viewMail(mailId);
+                }
+            });
+            infoPanel.add(mailPanel);
+            infoPanel.add(Box.createVerticalStrut(5));
+            infoPanel.revalidate();
+            infoPanel.repaint();
+        });
+    }
+
+    /**
+     * Crea un pannello per visualizzare una mail nella lista
+     * @param sender Mittente della mail
+     * @param object Oggetto della mail
+     * @return JPanel configurato per la visualizzazione della mail
+     */
+    private JPanel createMailPanel(String sender, String object) {
         JPanel mailPanel = new JPanel();
         mailPanel.setLayout(new BoxLayout(mailPanel, BoxLayout.Y_AXIS));
-        mailPanel.setBackground(Color.BLACK);
+        mailPanel.setBackground(BACKGROUND_COLOR);
         mailPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 60, 60), 1), // bordo esterno grigio scuro
-            BorderFactory.createEmptyBorder(2, 2, 2, 2) // padding interno
+            BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
+            BorderFactory.createEmptyBorder(2, 2, 2, 2)
         ));
-        // Label per il mittente
+
         JLabel senderLabel = new JLabel("> " + sender);
-        senderLabel.setFont(customFont.deriveFont(24));
-        senderLabel.setForeground(Color.GREEN);
+        senderLabel.setFont(customFont.deriveFont(24f));
+        senderLabel.setForeground(TERMINAL_COLOR);
         senderLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        // Label per l'oggetto
         JLabel objectLabel = new JLabel(object);
-        objectLabel.setFont(customFont.deriveFont(24));
-        objectLabel.setForeground(Color.GREEN);
+        objectLabel.setFont(customFont.deriveFont(24f));
+        objectLabel.setForeground(TERMINAL_COLOR);
         objectLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         mailPanel.add(senderLabel);
-        mailPanel.add(Box.createVerticalStrut(2));  // Piccolo spazio tra le label
+        mailPanel.add(Box.createVerticalStrut(2));
         mailPanel.add(objectLabel);
         
-        mailPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                gameController.viewMail(mailId);
-            }
-        });
-        
-        infoPanel.add(mailPanel);
-        infoPanel.add(Box.createVerticalStrut(5));
-        infoPanel.revalidate();
-        infoPanel.repaint();
+        return mailPanel;
     }
 
     public void showGameOverDialog() {

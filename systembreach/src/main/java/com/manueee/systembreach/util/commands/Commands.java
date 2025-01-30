@@ -6,14 +6,17 @@ import com.manueee.systembreach.model.GameState;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 /**
  * <h2>Commands</h2>
  * Funzioni dei comandi del gioco.
+ * Gestore dei comandi.
+ * Agisce come Controller nel pattern MVC, elaborando i comandi utente e aggiornando lo stato del modello.
  */
 public final class Commands {
-
+    
     private Commands() {
-
+        // Utility class
     }
 
     /**
@@ -216,13 +219,18 @@ public final class Commands {
         return "curl: illegal operation";
     }
 
+    /**
+     * Esegue il comando di SQL injection
+     * @param args argomenti del comando
+     * @return risultato dell'esecuzione
+     */
     public static String sqlinjectCommand(String args) {
         if (args == null || args.trim().isEmpty()) {
             return EnumCommands.SQLINJECT.getCommandInfo();
         }
-    
+
         String[] params = args.trim().split("\\s+");
-    
+
         // Controllo URL
         if (params.length == 2 && params[0].equals("-u")) {
             if (!"http://phantomorganization7xw3v.onion".equals(params[1])) {
@@ -232,45 +240,64 @@ public final class Commands {
             }
         }
     
-        // Controllo database
-        if (params.length >= 3) {
+        // Enumerazione database
+        if (params.length >= 3 && params[0].equals("-u")) {
             if (params[2].equals("--dbs")) {
                 return "sqlmap:\n\n[0] databases\n[1] information_schema\n[2] SB013\n\n";
             }
     
-            if (params[2].equals("-D")) {
-                if (params.length >= 4 && params[3].equals("SB013")) {
-                    if (params.length >= 5) {
-                        if (params[4].equals("--tables")) {
-                            return "sqlmap:\n\n[0] CLIENT\n[1] USERS\n[2] PAYMENT\n\n";
-                        }
-                        if (params[4].equals("-T") && params.length >= 6) {
-                            if (params[5].equals("USERS")) {
-                                return "sqlmap: USERS:\n" +
-                                        "+-----------+-----------+\n" +
-                                        "| Username  | Password  |\n" +
-                                        "+-----------+-----------+\n" +
-                                        "| us378     | v93g@1!mv |\n" +
-                                        "+-----------+-----------+";
-                            } else if (params[5].equals("CLIENT")) {
-                                return "> Non avrei dubitato che ci fosserò clienti dietro ad organizzazioni governative...comunque non è queta la tabella con le credenziali che mi servono.";
-                            } else if (params[5].equals("PAYMENT")) {
-                                return "> Guarda che cifre da capogiro! Mi chiedo come faranno a cambiare tutti quei bitcoin...comunque non è questa la tabella con le credenziali";
-                            } else {
+            // Enumerazione tabelle
+            if (params[2].equals("-D") && params.length >= 4) {
+                String dbName = params[3];
+                if (dbName.equals("SB013")) {
+                    if (params.length >= 5 && params[4].equals("--tables")) {
+                        return "sqlmap:\n\n[0] CLIENT\n[1] USERS\n[2] PAYMENT\n\n";
+                    }
+
+                    // Estrazione dati tabella
+                    if (params.length >= 6 && params[4].equals("-T")) {
+                        String tableName = params[5];
+                        switch (tableName) {
+                            case "USERS":
+                                return formatTableResult(
+                                    "USERS",
+                                    new String[]{"Username", "Password"},
+                                    new String[][]{{"us378", "v93g@1!mv"}}
+                                );
+                            case "CLIENT":
+                            case "PAYMENT":
+                                return "> Non è questa la tabella con le credenziali che mi servono.";
+                            default:
                                 return "sqlmap: unknown table";
-                            }
                         }
                     }
-                    return "sqlmap: illegal operation";
-                } else if (params.length >= 4 && (params[3].equals("information_schema") || params[3].equals("databases"))) {
+                } else if (dbName.equals("information_schema") || dbName.equals("databases")) {
                     return "> Questo database non ha le tabelle che mi servono...";
                 } else {
                     return "sqlmap: unknown database";
                 }
             }
         }
-    
+        
         return "sqlmap: illegal operation";
+    }
+
+    /**
+     * Formatta il risultato della query in una tabella ASCII
+     */
+    private static String formatTableResult(String tableName, String[] headers, String[][] data) {
+        StringBuilder result = new StringBuilder();
+        result.append("sqlmap: ").append(tableName).append(":\n");
+        result.append("+-----------+-----------+\n");
+        result.append("| ").append(String.join(" | ", headers)).append(" |\n");
+        result.append("+-----------+-----------+\n");
+        
+        for (String[] row : data) {
+            result.append("| ").append(String.join(" | ", row)).append(" |\n");
+        }
+        result.append("+-----------+-----------+");
+        
+        return result.toString();
     }
 
     public static String reverseCommand() {
