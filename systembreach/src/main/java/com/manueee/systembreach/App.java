@@ -4,20 +4,24 @@ import com.manueee.systembreach.view.MainMenuView;
 import javax.swing.SwingUtilities;
 
 /**
- * <h1>System Breach</h1>
- * Entry point dell'applicazione.
+ * System Breach
+ * Entry point dell'applicazione System Breach.
+ * 
  * @version alpha 0.2
  * @author Emanuele "manueee_13" Tamborrino
+ * @since 2024
  */
 public final class App {
-
+    
+    /**
+     * Costruttore privato.
+     */
     private App() {
     }
 
     /**
-     * <h2>main</h2>
-     * Metodo <b>main</b> per il lancio dell'applicazione.
-     * @param args Command-line arguments
+     * Main
+     * @param args Command-line arguments (non utilizzati)
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainMenuView::new);

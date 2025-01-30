@@ -21,10 +21,10 @@ public class Timer implements Runnable {
     private int currentTime;
 
     /**
-     * Costruisce un nuovo timer
-     * @param seconds Il numero di secondi iniziali
-     * @param listener L'oggetto che riceverà le notifiche del timer
-     * @throws IllegalArgumentException se seconds <= 0 o listener è null
+     * Costruisce un nuovo timer.
+     * @param seconds Secondi iniziali
+     * @param listener Listener per gli eventi del timer
+     * @throws IllegalArgumentException se seconds &lt;= 0 o se listener non è impostato
      */
     public Timer(int seconds, TimerListener listener) {
         if (seconds <= 0) {

@@ -8,10 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * <h2>Commands</h2>
- * Funzioni dei comandi del gioco.
- * Gestore dei comandi.
- * Agisce come Controller nel pattern MVC, elaborando i comandi utente e aggiornando lo stato del modello.
+ * Classe che implementa tutti i comandi disponibili nel gioco.
+ * Ogni comando è implementato come metodo statico che manipola lo stato del gioco.
  */
 public final class Commands {
     
@@ -102,6 +100,12 @@ public final class Commands {
         return command.getCommandInfo();
     }
 
+    /**
+     * Comando per decifrare file zip protetti da password.
+     * @param gameState lo stato corrente del gioco
+     * @param args gli argomenti del comando
+     * @return il risultato dell'operazione
+     */
     public static String decryptCommand(GameState gameState, String args) {
         FileSystem fs = gameState.getFileSystem();
 
@@ -175,9 +179,15 @@ public final class Commands {
             
         }
         
-    return "fcrackzip: unknown error";    
-}
+        return "fcrackzip: unknown error";    
+    }
 
+    /**
+     * Comando per effettuare richieste HTTP.
+     * @param gameState lo stato corrente del gioco
+     * @param args gli argomenti del comando
+     * @return il risultato dell'operazione
+     */
     public static String curlCommand(GameState gameState, String args) {
         if (args == null || args.trim().isEmpty()) {
             return EnumCommands.CURL.getCommandInfo();
@@ -208,7 +218,7 @@ public final class Commands {
                 } else {
                     return "curl: illegal operation";
                 }
-            } else if (params[1].equals("phantomorganization7xw3v.onion")) {
+            } else if (params[1].equals("http://phantomorganization7xw3v.onion")) {
                 return "> è il sito dell'organizzazione, non posso fare nulla qui...";
             } else if (params[1].matches(regex)) {
                 return "> Devo concentrarmi sul sito dell'organizzazione...";
@@ -261,12 +271,13 @@ public final class Commands {
                             case "USERS":
                                 return formatTableResult(
                                     "USERS",
-                                    new String[]{"Username", "Password"},
+                                    new String[]{"username", "password"},
                                     new String[][]{{"us378", "v93g@1!mv"}}
                                 );
                             case "CLIENT":
+                                return "> Non avevo dubbi che dietro ai clienti ci fosserò organizzazioni governative...comunque non è la tabella con le credenziali.";
                             case "PAYMENT":
-                                return "> Non è questa la tabella con le credenziali che mi servono.";
+                                return "> Guarda che cifre, mi chiedo come faranno a cambiare tutti quei bitcoin...comunque non è questa la tabella giusta.";
                             default:
                                 return "sqlmap: unknown table";
                         }

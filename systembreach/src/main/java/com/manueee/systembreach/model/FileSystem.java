@@ -377,7 +377,7 @@ public class FileSystem {
         }
 
         public Map<String, FSNode> getChildren() {
-            return new HashMap<>(children); // Returns a defensive copy
+            return new HashMap<>(children);
         }
     }
 }

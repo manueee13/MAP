@@ -1,0 +1,63 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+-classpath
+'C:/Users/etamb/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar;C:/Users/etamb/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'C:/Users/etamb/MAP/systembreach/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/etamb/MAP/systembreach/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'systembreach 0.2-alpha API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' 'C:/Users/etamb/MAP/systembreach/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'systembreach 0.2-alpha API'
+com.manueee.systembreach
+com.manueee.systembreach.controller
+com.manueee.systembreach.model
+com.manueee.systembreach.util.commands
+com.manueee.systembreach.util.database
+com.manueee.systembreach.util.fonts
+com.manueee.systembreach.util.sessions
+com.manueee.systembreach.view
+C:\Users\etamb\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar = 1726336661086
+C:\Users\etamb\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar = 1735317240213
+C:\Users\etamb\MAP\systembreach\src\main\java = 1734034516624
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\allclasses-index.html = 1738213105077
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\allpackages-index.html = 1738213105080
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\copy.svg = 1738213105112
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\element-list = 1738213104912
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\help-doc.html = 1738213105108
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\index-all.html = 1738213105097
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\index.html = 1738213105061
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\javadoc.bat = 1738213103618
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\link.svg = 1738213105113
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\member-search-index.js = 1738213105083
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\module-search-index.js = 1738213105081
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\overview-summary.html = 1738213105101
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\overview-tree.html = 1738213105058
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\package-search-index.js = 1738213105082
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\script.js = 1738213105111
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\search-page.js = 1738213105116
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\search.html = 1738213105099
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\search.js = 1738213105115
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\serialized-form.html = 1738213104975
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\stylesheet.css = 1738213105110
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\tag-search-index.js = 1738213105084
+C:\Users\etamb\MAP\systembreach\target\reports\apidocs\type-search-index.js = 1738213105082

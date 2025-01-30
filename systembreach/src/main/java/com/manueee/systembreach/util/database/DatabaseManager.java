@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
+/**
+ * Gestisce le operazioni sul database del gioco.
+ * Fornisce metodi per inizializzare il database e eseguire query.
+ */
 public class DatabaseManager {
     private static final String JDBC_URL = "jdbc:h2:./systembreach";
     private static final String USER = "admin";
@@ -19,6 +23,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Esegue una query SQL sul database.
+     * @param query la query SQL da eseguire
+     * @return il risultato della query formattato come stringa o null in caso di errore
+     */
     public String executeQuery (String query) {
         try (Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             Statement stmt = conn.createStatement()) {
@@ -42,6 +51,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Inizializza il database creando le tabelle necessarie.
+     * @param conn la connessione al database
+     */
     public void initializeDatabase(Connection conn) {
         try (Statement stmt = conn.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS USERS &");
