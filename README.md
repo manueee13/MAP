@@ -1,4 +1,4 @@
-Disclaimer: This was my college exam project. Of course it's all in Italian, so you wouldn't understand xd
+*Disclaimer: This was my university exam project. Of course it's all in Italian, so you wouldn't understand xd*
 
 # METODI AVANZATI DI PROGRAMMAZIONE (INFORMATICA M-Z)
 ## CASO DI STUDIO:
